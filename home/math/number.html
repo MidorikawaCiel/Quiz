@@ -2,4 +2,91 @@
   <h1>数</h1>
   <h2>数の種類</h2>
   <p>数</p>
+  <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="単語・読みで検索 (ひらがな/カタカナ区別なし)...">
+
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">単語</th>
+                <th onclick="sortTable(1)">読み</th>
+                <th onclick="sortTable(2)">説明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><a href="/Quiz/word/完全数">完全数</a></td><td>かんぜんすう</td><td>その数自身を除く正の約数の和がその数自身と等しくなる自然数</td></tr>
+        </tbody>
+    </table>
+
+<script>
+    /**
+     * カタカナをひらがなに変換する関数（検索の正規化用）
+     */
+    function kanaToHira(str) {
+        return str.replace(/[\u30a1-\u30f6]/g, function(match) {
+            const chr = match.charCodeAt(0) - 0x60;
+            return String.fromCharCode(chr);
+        });
+    }
+
+    function filterTable() {
+        const input = document.getElementById("searchInput");
+        // 入力値を「小文字」かつ「ひらがな」に統一
+        const filter = kanaToHira(input.value.toLowerCase());
+        const table = document.getElementById("myTable");
+        const tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            const tdWord = tr[i].getElementsByTagName("td")[0];
+            const tdReading = tr[i].getElementsByTagName("td")[1];
+            
+            if (tdWord && tdReading) {
+                // 比較対象のテキストも「ひらがな」に変換してチェック
+                const wordText = kanaToHira(tdWord.textContent.toLowerCase());
+                const readingText = kanaToHira(tdReading.textContent.toLowerCase());
+
+                if (wordText.indexOf(filter) > -1 || readingText.indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function sortTable(n) {
+        const table = document.getElementById("myTable");
+        let switching = true;
+        let dir = "asc"; 
+        let switchcount = 0;
+
+        while (switching) {
+            switching = false;
+            const rows = table.rows;
+            for (var i = 1; i < (rows.length - 1); i++) {
+                var shouldSwitch = false;
+                const x = rows[i].getElementsByTagName("td")[n];
+                const y = rows[i + 1].getElementsByTagName("td")[n];
+
+                const xVal = x.innerHTML.toLowerCase();
+                const yVal = y.innerHTML.toLowerCase();
+
+                if (dir === "asc") {
+                    if (xVal > yVal) { shouldSwitch = true; break; }
+                } else if (dir === "desc") {
+                    if (xVal < yVal) { shouldSwitch = true; break; }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else {
+                if (switchcount === 0 && dir === "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>
 </html>
