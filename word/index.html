@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* 視認性をシンプル（標準的）なものに調整 */
+        body { font-family: sans-serif; padding: 20px; color: #333; }
+        
+        #searchInput {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover { background-color: #ddd; }
+
+        th::after { content: " ↕"; color: #888; }
+    </style>
+</head>
+<body>
+
+    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="単語・読みで検索 (ひらがな/カタカナ区別なし)...">
+
+    <table id="myTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">単語</th>
+                <th onclick="sortTable(1)">読み</th>
+                <th onclick="sortTable(2)">分類</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><a href="/perfect-number">完全数</a></td><td>カンゼンスウ</td><td>数学用語</td></tr>
+            <tr><td>ペン</td><td>ぺん</td><td>文房具</td></tr>
+            <tr><td>時計</td><td>トケイ</td><td>雑貨</td></tr>
+            <tr><td>自転車</td><td>じてんしゃ</td><td>乗り物</td></tr>
+            <tr><td>消しゴム</td><td>けしごむ</td><td>文房具</td></tr>
+        </tbody>
+    </table>
+
+<script>
+    /**
+     * カタカナをひらがなに変換する関数（検索の正規化用）
+     */
+    function kanaToHira(str) {
+        return str.replace(/[\u30a1-\u30f6]/g, function(match) {
+            const chr = match.charCodeAt(0) - 0x60;
+            return String.fromCharCode(chr);
+        });
+    }
+
+    function filterTable() {
+        const input = document.getElementById("searchInput");
+        // 入力値を「小文字」かつ「ひらがな」に統一
+        const filter = kanaToHira(input.value.toLowerCase());
+        const table = document.getElementById("myTable");
+        const tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            const tdWord = tr[i].getElementsByTagName("td")[0];
+            const tdReading = tr[i].getElementsByTagName("td")[1];
+            
+            if (tdWord && tdReading) {
+                // 比較対象のテキストも「ひらがな」に変換してチェック
+                const wordText = kanaToHira(tdWord.textContent.toLowerCase());
+                const readingText = kanaToHira(tdReading.textContent.toLowerCase());
+
+                if (wordText.indexOf(filter) > -1 || readingText.indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function sortTable(n) {
+        const table = document.getElementById("myTable");
+        let switching = true;
+        let dir = "asc"; 
+        let switchcount = 0;
+
+        while (switching) {
+            switching = false;
+            const rows = table.rows;
+            for (var i = 1; i < (rows.length - 1); i++) {
+                var shouldSwitch = false;
+                const x = rows[i].getElementsByTagName("td")[n];
+                const y = rows[i + 1].getElementsByTagName("td")[n];
+
+                const xVal = x.innerHTML.toLowerCase();
+                const yVal = y.innerHTML.toLowerCase();
+
+                if (dir === "asc") {
+                    if (xVal > yVal) { shouldSwitch = true; break; }
+                } else if (dir === "desc") {
+                    if (xVal < yVal) { shouldSwitch = true; break; }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else {
+                if (switchcount === 0 && dir === "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
