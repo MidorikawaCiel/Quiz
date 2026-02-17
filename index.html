@@ -2,107 +2,44 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>単語帳検索・ソート</title>
+    <title>単語帳（検索・ソート）</title>
     <style>
-        body {
-            font-family: sans-serif;
-            padding: 20px;
-            background-color: #f4f7f6;
-            color: #333;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        h2 {
-            margin-top: 0;
-            color: #2c3e50;
-            border-left: 5px solid #3498db;
-            padding-left: 15px;
-        }
-
-        /* 検索バーのデザイン */
-        .search-container {
-            margin-bottom: 20px;
-        }
-
+        /* 視認性をシンプル（標準的）なものに調整 */
+        body { font-family: sans-serif; padding: 20px; color: #333; }
+        
         #searchInput {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 15px;
             font-size: 16px;
-            transition: border-color 0.3s;
-            outline: none;
+            border: 1px solid #ccc;
         }
 
-        #searchInput:focus {
-            border-color: #3498db;
-        }
-
-        /* テーブルのデザイン */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
         }
 
         th {
-            background-color: #3498db;
-            color: white;
+            background-color: #eee;
             cursor: pointer;
-            padding: 15px;
-            text-align: left;
-            position: relative;
             user-select: none;
         }
 
-        th:hover {
-            background-color: #2980b9;
-        }
+        th:hover { background-color: #ddd; }
 
-        th::after {
-            content: " ↕";
-            font-size: 0.8em;
-            opacity: 0.7;
-        }
-
-        td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        tr:hover {
-            background-color: #f1f9ff;
-        }
-
-        .no-result {
-            color: #e74c3c;
-            font-weight: bold;
-            display: none;
-            margin-top: 10px;
-        }
+        th::after { content: " ↕"; color: #888; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>単語データ一覧</h2>
-    
-    <div class="search-container">
-        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="単語、または読みで検索...">
-    </div>
+    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="単語・読みで検索 (ひらがな/カタカナ区別なし)...">
 
     <table id="myTable">
         <thead>
@@ -114,54 +51,49 @@
         </thead>
         <tbody>
             <tr><td>林檎</td><td>りんご</td><td>果物</td></tr>
-            <tr><td>鉛筆</td><td>えんぴつ</td><td>文房具</td></tr>
-            <tr><td>時計</td><td>とけい</td><td>雑貨</td></tr>
+            <tr><td>ペン</td><td>ぺん</td><td>文房具</td></tr>
+            <tr><td>時計</td><td>トケイ</td><td>雑貨</td></tr>
             <tr><td>自転車</td><td>じてんしゃ</td><td>乗り物</td></tr>
-            <tr><td>葡萄</td><td>ぶどう</td><td>果物</td></tr>
             <tr><td>消しゴム</td><td>けしごむ</td><td>文房具</td></tr>
         </tbody>
     </table>
-    <p id="noResultMsg" class="no-result">一致する項目が見つかりません。</p>
-</div>
 
 <script>
     /**
-     * 検索機能：「単語」と「読み」の両方を対象にフィルタリング
+     * カタカナをひらがなに変換する関数（検索の正規化用）
      */
+    function kanaToHira(str) {
+        return str.replace(/[\u30a1-\u30f6]/g, function(match) {
+            const chr = match.charCodeAt(0) - 0x60;
+            return String.fromCharCode(chr);
+        });
+    }
+
     function filterTable() {
         const input = document.getElementById("searchInput");
-        const filter = input.value.toLowerCase();
+        // 入力値を「小文字」かつ「ひらがな」に統一
+        const filter = kanaToHira(input.value.toLowerCase());
         const table = document.getElementById("myTable");
         const tr = table.getElementsByTagName("tr");
-        let visibleCount = 0;
 
         for (let i = 1; i < tr.length; i++) {
-            const tdWord = tr[i].getElementsByTagName("td")[0]; // 単語
-            const tdReading = tr[i].getElementsByTagName("td")[1]; // 読み
+            const tdWord = tr[i].getElementsByTagName("td")[0];
+            const tdReading = tr[i].getElementsByTagName("td")[1];
             
             if (tdWord && tdReading) {
-                const wordText = tdWord.textContent || tdWord.innerText;
-                const readingText = tdReading.textContent || tdReading.innerText;
+                // 比較対象のテキストも「ひらがな」に変換してチェック
+                const wordText = kanaToHira(tdWord.textContent.toLowerCase());
+                const readingText = kanaToHira(tdReading.textContent.toLowerCase());
 
-                // 単語か読みのどちらかに含まれていれば表示
-                if (wordText.toLowerCase().indexOf(filter) > -1 || 
-                    readingText.toLowerCase().indexOf(filter) > -1) {
+                if (wordText.indexOf(filter) > -1 || readingText.indexOf(filter) > -1) {
                     tr[i].style.display = "";
-                    visibleCount++;
                 } else {
                     tr[i].style.display = "none";
                 }
             }
         }
-        
-        // 検索結果がゼロの場合のメッセージ制御
-        const msg = document.getElementById("noResultMsg");
-        msg.style.display = (visibleCount === 0 && filter !== "") ? "block" : "none";
     }
 
-    /**
-     * ソート機能
-     */
     function sortTable(n) {
         const table = document.getElementById("myTable");
         let switching = true;
@@ -171,8 +103,8 @@
         while (switching) {
             switching = false;
             const rows = table.rows;
-            for (let i = 1; i < (rows.length - 1); i++) {
-                let shouldSwitch = false;
+            for (var i = 1; i < (rows.length - 1); i++) {
+                var shouldSwitch = false;
                 const x = rows[i].getElementsByTagName("td")[n];
                 const y = rows[i + 1].getElementsByTagName("td")[n];
 
