@@ -40,14 +40,14 @@
 <h2>元素</h2>
     <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="検索...">
 
-    <div class="table-container">
+    iv class="table-container">
         <table id="myTable">
             <thead>
                 <tr>
-                    <th onclick="sortTable(0)">原子番号</th>
+                    <th onclick="sortTable(0)">番号</th>
                     <th onclick="sortTable(1)">元素名</th>
                     <th onclick="sortTable(2)">読み</th>
-                    <th onclick="sortTable(3)">元素記号</th>
+                    <th onclick="sortTable(3)">記号</th>
                     <th onclick="sortTable(4)">グループ</th>
                     <th onclick="sortTable(5)">説明</th>
                 </tr>
@@ -59,6 +59,7 @@
 </div>
 
 <script>
+    // 118元素データの定義 (前回の全データを保持)
     const elements = [
         [1, "水素", "すいそ", "H", "非金属", "プロチウム(1H)、デューテリウム(2H、D)、トリチウム(3H、T)の3種類の同位体が存在する。宇宙に最も多い元素。"],
         [2, "ヘリウム", "ヘリウム", "He", "非金属, 貴ガス", "ギリシャ語で「太陽」という意味。宇宙に存在する元素の中では水素に次いで多い。酸素とヘリウムの混合物を吸い込むと一時的に声が高くなる(ドナルドダック効果)。"],
@@ -140,7 +141,7 @@
         [78, "白金", "はっきん", "Pt", "遷移金属, 白金族, レアメタル", "高級宝飾品、触媒。"],
         [79, "金", "きん", "Au", "遷移金属", "最も延性・展性が高い。"],
         [80, "水銀", "すいぎん", "Hg", "遷移金属", "唯一常温で液体の金属。"],
-        [81, "タリウム", "タリウム", "Tl", "卑金属", "殺鼠剤などに使われた毒物。"],
+        [81, "タリウム", "タリウム", "Tl", "卑金属", "かつて殺鼠剤に使われた毒物。"],
         [82, "鉛", "なまり", "Pb", "卑金属", "釣りの重りや放射線遮蔽。"],
         [83, "ビスマス", "ビスマス", "Bi", "卑金属", "低融点合金の材料。"],
         [84, "ポロニウム", "ポロニウム", "Po", "類金属", "強い放射能を持つ。"],
@@ -200,16 +201,28 @@
             let found = false;
             const tds = tr[i].getElementsByTagName("td");
             
-            // 部分一致対象 (番号, 元素名, 読み, 記号)
-            for (let j = 0; j <= 3; j++) {
-                const text = kanaToHira(tds[j].textContent.toLowerCase());
-                if (text.indexOf(filter) > -1) { found = true; break; }
+            // --- 完全一致対象 ---
+            
+            // 0: 原子番号
+            const atomNum = tds[0].textContent.trim().toLowerCase();
+            if (atomNum === filter) {
+                found = true;
             }
 
-            // 完全一致対象 (グループ)
+            // 4: グループ
             if (!found && tds[4]) {
                 const groups = tds[4].textContent.split(",").map(g => kanaToHira(g.trim().toLowerCase()));
                 if (groups.includes(filter)) found = true;
+            }
+
+            // --- 部分一致対象 ---
+            
+            // 1:元素名, 2:読み, 3:記号
+            if (!found) {
+                for (let j = 1; j <= 3; j++) {
+                    const text = kanaToHira(tds[j].textContent.toLowerCase());
+                    if (text.indexOf(filter) > -1) { found = true; break; }
+                }
             }
 
             tr[i].style.display = found || filter === "" ? "" : "none";
