@@ -90,7 +90,7 @@
         [30, "亜鉛", "アエン", "Zn", "金属, 遷移金属", "ボルタ電池の負極に用いられる。鉄板に亜鉛をメッキしたものはトタンという。"],
         [31, "ガリウム", "ガリウム", "Ga", "金属, 卑金属, レアメタル", "ロシアの化学者メンデレーエフは「エカアルミニウム」という名前で存在を予想した。フランスの化学者ボアボードランがピレネー山脈でとれた鉱石から発見した。フランスのラテン名「ガリア」から名付けられた。"],
         [32, "ゲルマニウム", "ゲルマニウム", "Ge", "半金属, レアメタル", "ロシアの化学者メンデレーエフは「エカケイ素」という名前で存在を予想した。発見者のクレメンス・ヴィンクラーが祖国・ドイツの古名「ゲルマニア」にちなんで名付けた。"],
-        [33, "ヒ素", "ヒソ", "As", "類金属", "毒性があるが半導体に使用。"],
+        [33, "ヒ素", "ヒソ", "As", "半金属", "13世紀にアルベルトゥス・マグヌスが発見したとされる。"],
         [34, "セレン", "セレン", "Se", "非金属", "感光体やガラスの着色。"],
         [35, "臭素", "シュウソ", "Br", "ハロゲン", "常温で液体の非金属。"],
         [36, "クリプトン", "クリプトン", "Kr", "貴ガス", "高輝度電球に使用。"],
@@ -185,13 +185,14 @@
         tbody.appendChild(tr);
     });
 
-    function kanaToHira(str) {
-        return str.replace(/[\u30a1-\u30f6]/g, m => String.fromCharCode(m.charCodeAt(0) - 0x60));
+    function hiraToKana(str) {
+        return str.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60));
     }
 
     function filterTable() {
         const input = document.getElementById("searchInput");
-        const filter = kanaToHira(input.value.trim().toLowerCase());
+        // 入力値をカタカナに正規化
+        const filter = hiraToKana(input.value.trim().toUpperCase());
         const tr = tbody.getElementsByTagName("tr");
 
         for (let i = 0; i < tr.length; i++) {
@@ -200,24 +201,22 @@
             
             // --- 完全一致対象 ---
             
-            // 0: 原子番号
-            const atomNum = tds[0].textContent.trim().toLowerCase();
-            if (atomNum === filter) {
+            // 0: 原子番号 (文字列比較)
+            if (tds[0].textContent.trim() === filter) {
                 found = true;
             }
 
             // 4: グループ
             if (!found && tds[4]) {
-                const groups = tds[4].textContent.split(",").map(g => kanaToHira(g.trim().toLowerCase()));
+                const groups = tds[4].textContent.split(",").map(g => hiraToKana(g.trim().toUpperCase()));
                 if (groups.includes(filter)) found = true;
             }
 
             // --- 部分一致対象 ---
             
-            // 1:元素名, 2:読み, 3:記号
             if (!found) {
                 for (let j = 1; j <= 3; j++) {
-                    const text = kanaToHira(tds[j].textContent.toLowerCase());
+                    const text = hiraToKana(tds[j].textContent.toUpperCase());
                     if (text.indexOf(filter) > -1) { found = true; break; }
                 }
             }
@@ -225,7 +224,7 @@
             tr[i].style.display = found || filter === "" ? "" : "none";
         }
     }
-
+    
     function sortTable(n) {
         const table = document.getElementById("myTable");
         let switching = true;
