@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>用語データベース</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; color: #333; }
+        h2 { margin-bottom: 20px; }
+        
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 85vh; 
+            border: 1px solid #ccc;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            background-color: #eee;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th::after { 
+            content: " ↕"; 
+            color: #888; 
+            font-size: 0.8em; 
+        }
+
+        td {
+            border: 1px solid #ccc;
+            padding: 8px 10px;
+            text-align: left;
+            background-color: #fff;
+        }
+
+        /* ご指定の4列に合わせた幅調整 */
+        .col-term { width: 20%; }
+        .col-kana { width: 20%; }
+        .col-group { width: 20%; }
+        .col-desc { width: 40%; }
+
+        tr { background-color: #fff; }
+    </style>
+</head>
+<body>
+
+    <h2>用語データベース</h2>
+    <p style="font-size: 0.9em; color: #666;">※グループ列は完全一致、その他は部分一致で検索されます。</p>
+    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="用語、読み、またはグループ名（ネットワーク、基本など）で検索...">
+
+    <div class="table-container">
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)" class="col-term">用語</th>
+                    <th onclick="sortTable(1)" class="col-kana">読み</th>
+                    <th onclick="sortTable(2)" class="col-group">グループ</th>
+                    <th onclick="sortTable(3)" class="col-desc">説明</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data will be injected here -->
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    // [用語, 読み, グループ, 説明]
+    // 漫画やラノベと同様に、この配列の中に [ ] を追加していくことで何個でも増やせます。
+    const termData = [
+        ["アルゴリズム", "あるごりずむ", "プログラミング, 基本", "問題を解決するための計算手順や処理方法のこと。"],
+        ["完全数", "カンゼンスウ", "数論", "その数以外の約数の和がその数と等しくなる数。6、28、496など"],
+        ["IPアドレス", "あいぴーあどれす", "ネットワーク, 基本", "インターネットなどのネットワークに接続された機器を識別する番号。"],
+        ["暗号化", "あんごうか", "セキュリティ", "データを第三者に解読できない形式に変換すること。"],
+        ["クラウド", "くらうど", "ネットワーク", "インターネット経由でストレージやソフトウェアなどのサービスを利用する形態。"],
+        ["コンパイル", "こんぱいる", "プログラミング", "人間が書いたプログラムを、コンピュータが理解できる形式に変換する作業。"],
+        ["サーバー", "さーばー", "ネットワーク, ハードウェア", "他のコンピュータ（クライアント）からの要求に応じてデータを提供するシステム。"],
+        ["データベース", "でーたべーす", "プログラミング, 基本", "大量のデータを効率よく管理・検索できるように整理した仕組み。"],
+        ["ファイアウォール", "ふぁいあうぉーる", "セキュリティ, ネットワーク", "不正な通信が内部のネットワークに侵入するのを防ぐシステム。"],
+        ["リレーショナル", "りれーしょなる", "データベース", "データを複数の表（テーブル）形式で管理し、相互に関連付ける方式。"]
+    ];
+
+    const tbody = document.getElementById("tableBody");
+
+    function renderTable() {
+        tbody.innerHTML = "";
+        termData.forEach(t => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td>${t[0]}</td><td>${t[1]}</td><td>${t[2]}</td><td>${t[3]}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+    renderTable();
+
+    function hiraToKana(str) {
+        return str.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60));
+    }
+
+    function filterTable() {
+        const input = document.getElementById("searchInput");
+        const filter = hiraToKana(input.value.trim().toUpperCase());
+        const tr = tbody.getElementsByTagName("tr");
+
+        for (let i = 0; i < tr.length; i++) {
+            let found = false;
+            const tds = tr[i].getElementsByTagName("td");
+            if (filter === "") {
+                tr[i].style.display = "";
+                continue;
+            }
+            // 部分一致 (0:用語, 1:読み)
+            for (let j = 0; j <= 1; j++) {
+                const text = hiraToKana(tds[j].textContent.toUpperCase());
+                if (text.indexOf(filter) > -1) { found = true; break; }
+            }
+            // 完全一致 (2:グループ)
+            if (!found && tds[2]) {
+                const groups = tds[2].textContent.split(",").map(g => hiraToKana(g.trim().toUpperCase()));
+                if (groups.includes(filter)) found = true;
+            }
+            tr[i].style.display = found ? "" : "none";
+        }
+    }
+
+    function sortTable(n) {
+        const table = document.getElementById("myTable");
+        let switching = true;
+        let dir = "asc"; 
+        let switchcount = 0;
+        while (switching) {
+            switching = false;
+            const rows = tbody.rows;
+            for (var i = 0; i < (rows.length - 1); i++) {
+                var shouldSwitch = false;
+                const x = rows[i].getElementsByTagName("td")[n];
+                const y = rows[i + 1].getElementsByTagName("td")[n];
+                const xVal = x.textContent.toLowerCase();
+                const yVal = y.textContent.toLowerCase();
+                if (dir === "asc" ? xVal > yVal : xVal < yVal) { shouldSwitch = true; break; }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else if (switchcount === 0 && dir === "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
