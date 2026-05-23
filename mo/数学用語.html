@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>用語データベース</title>
+    <title>数学用語</title>
     <style>
         body { font-family: sans-serif; padding: 20px; color: #333; }
         h2 { margin-bottom: 20px; }
@@ -64,9 +64,8 @@
 </head>
 <body>
 
-    <h2>用語データベース</h2>
-    <p style="font-size: 0.9em; color: #666;">※グループ列は完全一致、その他は部分一致で検索されます。</p>
-    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="用語、読み、またはグループ名（ネットワーク、基本など）で検索...">
+    <h2>数学用語</h2>
+    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="検索...">
 
     <div class="table-container">
         <table id="myTable">
@@ -90,7 +89,7 @@
     const termData = [
         ["アルゴリズム", "あるごりずむ", "プログラミング, 基本", "問題を解決するための計算手順や処理方法のこと。"],
         ["完全数", "カンゼンスウ", "数論", "その数以外の約数の和がその数と等しくなる数。6、28、496など"],
-        ["IPアドレス", "あいぴーあどれす", "ネットワーク, 基本", "インターネットなどのネットワークに接続された機器を識別する番号。"],
+        ["正弦", "セイゲン", "三角関数", "三角関数のsinのこと。"],
         ["暗号化", "あんごうか", "セキュリティ", "データを第三者に解読できない形式に変換すること。"],
         ["クラウド", "くらうど", "ネットワーク", "インターネット経由でストレージやソフトウェアなどのサービスを利用する形態。"],
         ["コンパイル", "こんぱいる", "プログラミング", "人間が書いたプログラムを、コンピュータが理解できる形式に変換する作業。"],
