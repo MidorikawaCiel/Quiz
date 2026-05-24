@@ -11,11 +11,21 @@
             margin-bottom: 15px;
             font-size: 16px;
             border: 1px solid #ccc;
+            box-sizing: border-box; /* 検索窓が枠からはみ出るのを防ぐ */
+        }
+
+        /* --- 【追加】スクロールさせる外枠のコンテナ --- */
+        .table-container {
+            overflow: auto;       /* 縦横のスクロールバーを自動表示 */
+            max-height: 75vh;     /* 画面の高さの75%を超えたら縦スクロール */
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 900px;     /* 横幅が狭くなってもテーブルが潰れないように制限 */
         }
 
         th, td {
@@ -28,16 +38,25 @@
             background-color: #eee;
             cursor: pointer;
             user-select: none;
+            /* --- 【追加】ヘッダー固定用の設定 --- */
+            position: sticky;
+            top: 0;
+            z-index: 10;          /* スクロール時にデータ行より手前に表示 */
         }
 
         th:hover { background-color: #ddd; }
 
         th::after { content: " ↕"; color: #888; }
+        
+        /* データの背景が透明だと固定ヘッダーと文字が重なるため白に固定 */
+        td { background-color: #fff; }
     </style>
 </head>
 <body>
 <h2>元素</h2>
     <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="検索...">
+    
+    <div class="table-container">
         <table id="myTable">
             <thead>
                 <tr>
@@ -50,10 +69,9 @@
                 </tr>
             </thead>
             <tbody id="tableBody">
-                </tbody>
+            </tbody>
         </table>
     </div>
-</div>
 
 <script>
     // 118元素データの定義 (前回の全データを保持)
@@ -191,7 +209,6 @@
 
     function filterTable() {
         const input = document.getElementById("searchInput");
-        // 入力値をカタカナに正規化
         const filter = hiraToKana(input.value.trim().toUpperCase());
         const tr = tbody.getElementsByTagName("tr");
 
@@ -199,21 +216,15 @@
             let found = false;
             const tds = tr[i].getElementsByTagName("td");
             
-            // --- 完全一致対象 ---
-            
-            // 0: 原子番号 (文字列比較)
             if (tds[0].textContent.trim() === filter) {
                 found = true;
             }
 
-            // 4: グループ
             if (!found && tds[4]) {
                 const groups = tds[4].textContent.split(",").map(g => hiraToKana(g.trim().toUpperCase()));
                 if (groups.includes(filter)) found = true;
             }
 
-            // --- 部分一致対象 ---
-            
             if (!found) {
                 for (let j = 1; j <= 3; j++) {
                     const text = hiraToKana(tds[j].textContent.toUpperCase());
