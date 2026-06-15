@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テンプレート</title>
+    <style>
+        /* 基本リセット & 共通スタイル */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* プロフィールカードのコンテナ */
+        .profile-card {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        /* ヘッダー部分（名前・英語表記） */
+        .profile-header {
+            border-bottom: 2px solid #eef2f3;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .profile-name-en {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-top: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        /* 基本情報のグリッドレイアウト */
+        .profile-meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        .profile-meta-table th, 
+        .profile-meta-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #f1f2f6;
+        }
+        .profile-meta-table th {
+            width: 30%;
+            color: #7f8c8d;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .profile-meta-table td {
+            width: 70%;
+            color: #333;
+        }
+
+        /* 著作・実績のリスト */
+        .profile-works-list {
+            padding-left: 20px;
+            margin: 0;
+        }
+        .profile-works-list li {
+            margin-bottom: 4px;
+        }
+
+        /* 説明文・エピソード */
+        .profile-description {
+            background-color: #fdfdfd;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 0 8px 8px 0;
+        }
+        .profile-description h3 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        .profile-description p {
+            font-size: 0.95rem;
+            color: #555;
+            white-space: pre-wrap; /* 改行をそのまま反映 */
+        }
+
+        /* 外部リンクボタン */
+        .profile-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn-link {
+            display: inline-block;
+            background-color: #3498db;
+            color: #ffffff;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+        }
+        .btn-link:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        /* レスポンシブ対応（スマホ表示） */
+        @media (max-width: 600px) {
+            .profile-card {
+                padding: 20px;
+                margin: 10px auto;
+            }
+            .profile-meta-table th, 
+            .profile-meta-table td {
+                display: block;
+                width: 100%;
+                padding: 6px 0;
+            }
+            .profile-meta-table th {
+                border-bottom: none;
+                color: #95a5a6;
+                font-size: 0.85rem;
+            }
+            .profile-meta-table td {
+                border-bottom: 1px solid #f1f2f6;
+                padding-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="profile-card">
+        <header class="profile-header">
+            <h1 class="profile-name">ピエール・ド・フェルマー</h1>
+            <p class="profile-name-en">Pierre de Fermat</p>
+        </header>
+
+        <table class="profile-meta-table">
+            <tbody>
+                <tr>
+                    <th>生年月日</th>
+                    <td>1607年10月31日 - 12月6日</td>
+                </tr>
+                <tr>
+                    <th>没年</th>
+                    <td>1665年1月12日</td>
+                </tr>
+                <tr>
+                    <th>出身地</th>
+                    <td>フランス王国、ボーモン＝ド＝ロマーニュ</td>
+                </tr>
+                <tr>
+                    <th>職業</th>
+                    <td>弁護士、数学者</td>
+                </tr>
+                <tr>
+                    <th>所属</th>
+                    <td>無所属</td>
+                </tr>
+                <tr>
+                    <th>主な著作・実績</th>
+                    <td>
+                        <ul class="profile-works-list">
+                            <li>フェルマーの最終定理/li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <section class="profile-description">
+            <h3>解説</h3>
+            <p>ディオファントスの『算術』に問題を書き残した。</p>
+        </section>
+
+        <div class="profile-links">
+            <a href="https://midorikawaciel.github.io/Quiz/" target="_blank" rel="noopener noreferrer" class="btn-link">リンク</a>
+        </div>
+    </main>
+
+</body>
+</html
