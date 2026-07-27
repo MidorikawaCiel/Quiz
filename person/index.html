@@ -127,31 +127,43 @@
       },
       {
         name: "織田信長",
-        yomi: ["おだのぶなが", "おだきちほうし"],
+        yomi: ["オダノブナガ", "おだきちほうし"],
         description: "戦国時代から安土桃山時代にかけての武将・戦国大名。三英傑の一人。",
         url: "https://example.com/oda",
         tags: ["歴史", "戦国時代", "武将"]
       },
       {
         name: "芥川龍之介",
-        yomi: ["あくたがわりゅうのすけ", "akutagawa ryunosuke"],
+        yomi: ["あくたがわりゅうのすけ", "Akutagawa Ryunosuke"],
         description: "大正時代の日本の小説家。『羅生門』『蜘蛛の糸』などが有名。",
         url: "https://example.com/akutagawa",
         tags: ["文学", "大正", "小説家"]
       },
       {
         name: "坂本龍馬",
-        yomi: ["さかもとりょうま", "さかもとなおかげ"],
+        yomi: ["さかもとりょうま", "サカモトナオカゲ"],
         description: "江戸時代末期の志士。薩長同盟の仲介や大政奉還の推進に尽力した。",
         url: "https://example.com/sakamoto",
         tags: ["歴史", "幕末", "志士"]
       }
     ];
 
+    // カタカナをひらがなに変換し、アルファベットを小文字化するヘルパー関数
+    function normalizeString(str) {
+      if (!str) return "";
+      // カタカナ (Unicode: 30A1-30F6) を ひらがな (Unicode: 3041-3096) に変換
+      const kanaConverted = str.replace(/[\u30a1-\u30f6]/g, match => {
+        const chr = match.charCodeAt(0) - 0x60;
+        return String.fromCharCode(chr);
+      });
+      // アルファベットを小文字化
+      return kanaConverted.toLowerCase();
+    }
+
     // 2. 1つ目の読み仮名をもとに五十音順にソート
     peopleData.sort((a, b) => {
-      const firstYomiA = a.yomi[0] || "";
-      const firstYomiB = b.yomi[0] || "";
+      const firstYomiA = normalizeString(a.yomi[0] || "");
+      const firstYomiB = normalizeString(b.yomi[0] || "");
       return firstYomiA.localeCompare(firstYomiB, 'ja');
     });
 
@@ -169,7 +181,7 @@
         const card = document.createElement("div");
         card.className = "person-card";
 
-        // 1つ目の読み仮名のみを取得（存在しない場合は空文字）
+        // 1つ目の読み仮名のみを取得
         const primaryYomi = person.yomi[0] || "";
 
         // タグのHTML作成
@@ -190,10 +202,10 @@
     // 初回描画
     renderList(peopleData);
 
-    // 4. 検索機能の実装
+    // 4. 検索機能の実装（ひらがな/カタカナ・大文字/小文字を非区別化）
     const searchInput = document.getElementById("searchInput");
     searchInput.addEventListener("input", (e) => {
-      const keyword = e.target.value.trim().toLowerCase();
+      const keyword = normalizeString(e.target.value.trim());
 
       if (!keyword) {
         renderList(peopleData);
@@ -201,14 +213,14 @@
       }
 
       const filtered = peopleData.filter(person => {
-        // 名前（部分一致）
-        const matchName = person.name.toLowerCase().includes(keyword);
+        // 名前（正規化して部分一致）
+        const matchName = normalizeString(person.name).includes(keyword);
         
-        // 読み（複数登録されたいずれかと部分一致）
-        const matchYomi = person.yomi.some(y => y.toLowerCase().includes(keyword));
+        // 読み（正規化して部分一致）
+        const matchYomi = person.yomi.some(y => normalizeString(y).includes(keyword));
 
-        // タグ（完全一致）
-        const matchTagExact = person.tags.some(t => t.toLowerCase() === keyword);
+        // タグ（正規化して完全一致）
+        const matchTagExact = person.tags.some(t => normalizeString(t) === keyword);
 
         // 判定（名前、読み、タグ完全一致のいずれかに該当）
         return matchName || matchYomi || matchTagExact;
