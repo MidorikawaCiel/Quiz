@@ -108,7 +108,7 @@
       type="text" 
       id="searchInput" 
       class="search-input" 
-      placeholder="名前、読み、説明、タグで検索..."
+      placeholder="名前、読み（部分一致）またはタグ（完全一致）で検索..."
     >
   </div>
 
@@ -116,7 +116,7 @@
   <div id="personList" class="person-list"></div>
 
   <script>
-    // 1. 人物データ（名前、読み配列、説明、リンク、タグ配列）
+    // 1. 人物データ
     const peopleData = [
       {
         name: "夏目漱石",
@@ -134,7 +134,7 @@
       },
       {
         name: "芥川龍之介",
-        yomi: ["あくたがわりゅうのすけ", "あくたがわりゅうのすけ"],
+        yomi: ["あくたがわりゅうのすけ", "akutagawa ryunosuke"],
         description: "大正時代の日本の小説家。『羅生門』『蜘蛛の糸』などが有名。",
         url: "https://example.com/akutagawa",
         tags: ["文学", "大正", "小説家"]
@@ -148,7 +148,7 @@
       }
     ];
 
-    // 2. 1つ目の読み仮名をもとに五十音順にソート（localeCompareを利用）
+    // 2. 1つ目の読み仮名をもとに五十音順にソート
     peopleData.sort((a, b) => {
       const firstYomiA = a.yomi[0] || "";
       const firstYomiB = b.yomi[0] || "";
@@ -169,12 +169,15 @@
         const card = document.createElement("div");
         card.className = "person-card";
 
+        // 1つ目の読み仮名のみを取得（存在しない場合は空文字）
+        const primaryYomi = person.yomi[0] || "";
+
         // タグのHTML作成
         const tagsHtml = person.tags.map(tag => `<span class="tag">#${tag}</span>`).join("");
 
         card.innerHTML = `
           <div class="person-name">${person.name}</div>
-          <div class="person-yomi">（${person.yomi.join(" / ")}）</div>
+          <div class="person-yomi">（${primaryYomi}）</div>
           <p class="person-desc">${person.description}</p>
           <div class="person-tags">${tagsHtml}</div>
           <a class="person-link" href="${person.url}" target="_blank" rel="noopener noreferrer">詳細を見る →</a>
@@ -187,7 +190,7 @@
     // 初回描画
     renderList(peopleData);
 
-    // 4. 検索機能の実装（入力されたキーワードでリアルタイムフィルタリング）
+    // 4. 検索機能の実装
     const searchInput = document.getElementById("searchInput");
     searchInput.addEventListener("input", (e) => {
       const keyword = e.target.value.trim().toLowerCase();
@@ -198,19 +201,17 @@
       }
 
       const filtered = peopleData.filter(person => {
-        // 名前でのマッチ
+        // 名前（部分一致）
         const matchName = person.name.toLowerCase().includes(keyword);
         
-        // 読み（複数）のいずれかでのマッチ
+        // 読み（複数登録されたいずれかと部分一致）
         const matchYomi = person.yomi.some(y => y.toLowerCase().includes(keyword));
-        
-        // 説明文でのマッチ
-        const matchDesc = person.description.toLowerCase().includes(keyword);
 
-        // タグ（複数）のいずれかでのマッチ
-        const matchTags = person.tags.some(t => t.toLowerCase().includes(keyword));
+        // タグ（完全一致）
+        const matchTagExact = person.tags.some(t => t.toLowerCase() === keyword);
 
-        return matchName || matchYomi || matchDesc || matchTags;
+        // 判定（名前、読み、タグ完全一致のいずれかに該当）
+        return matchName || matchYomi || matchTagExact;
       });
 
       renderList(filtered);
