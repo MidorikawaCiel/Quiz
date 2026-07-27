@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人物リスト検索</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 16px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* 検索バー周り */
+    .search-container {
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    /* リスト要素 */
+    .person-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .person-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .person-name {
+      margin: 0 0 4px 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .person-yomi {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .person-desc {
+      margin: 0 0 12px 0;
+      line-height: 1.5;
+    }
+
+    .person-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      background: #eef2f5;
+      color: #475569;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .person-link {
+      display: inline-block;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .person-link:hover {
+      text-decoration: underline;
+    }
+
+    .no-result {
+      text-align: center;
+      color: #888;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>人物リスト</h1>
+
+  <!-- 検索フィールド -->
+  <div class="search-container">
+    <input 
+      type="text" 
+      id="searchInput" 
+      class="search-input" 
+      placeholder="名前、読み、説明、タグで検索..."
+    >
+  </div>
+
+  <!-- 人物リスト出力エリア -->
+  <div id="personList" class="person-list"></div>
+
+  <script>
+    // 1. 人物データ（名前、読み配列、説明、リンク、タグ配列）
+    const peopleData = [
+      {
+        name: "夏目漱石",
+        yomi: ["なつめそうせき", "natsume souseki"],
+        description: "日本の小説家、評論家、英文学者。『吾輩は猫である』『こころ』などの作品で知られる。",
+        url: "https://example.com/natsume",
+        tags: ["文学", "明治", "小説家"]
+      },
+      {
+        name: "織田信長",
+        yomi: ["おだのぶなが", "おだきちほうし"],
+        description: "戦国時代から安土桃山時代にかけての武将・戦国大名。三英傑の一人。",
+        url: "https://example.com/oda",
+        tags: ["歴史", "戦国時代", "武将"]
+      },
+      {
+        name: "芥川龍之介",
+        yomi: ["あくたがわりゅうのすけ", "あくたがわりゅうのすけ"],
+        description: "大正時代の日本の小説家。『羅生門』『蜘蛛の糸』などが有名。",
+        url: "https://example.com/akutagawa",
+        tags: ["文学", "大正", "小説家"]
+      },
+      {
+        name: "坂本龍馬",
+        yomi: ["さかもとりょうま", "さかもとなおかげ"],
+        description: "江戸時代末期の志士。薩長同盟の仲介や大政奉還の推進に尽力した。",
+        url: "https://example.com/sakamoto",
+        tags: ["歴史", "幕末", "志士"]
+      }
+    ];
+
+    // 2. 1つ目の読み仮名をもとに五十音順にソート（localeCompareを利用）
+    peopleData.sort((a, b) => {
+      const firstYomiA = a.yomi[0] || "";
+      const firstYomiB = b.yomi[0] || "";
+      return firstYomiA.localeCompare(firstYomiB, 'ja');
+    });
+
+    // 3. リストを描画する関数
+    function renderList(data) {
+      const container = document.getElementById("personList");
+      container.innerHTML = "";
+
+      if (data.length === 0) {
+        container.innerHTML = '<p class="no-result">該当する人物が見つかりません。</p>';
+        return;
+      }
+
+      data.forEach(person => {
+        const card = document.createElement("div");
+        card.className = "person-card";
+
+        // タグのHTML作成
+        const tagsHtml = person.tags.map(tag => `<span class="tag">#${tag}</span>`).join("");
+
+        card.innerHTML = `
+          <div class="person-name">${person.name}</div>
+          <div class="person-yomi">（${person.yomi.join(" / ")}）</div>
+          <p class="person-desc">${person.description}</p>
+          <div class="person-tags">${tagsHtml}</div>
+          <a class="person-link" href="${person.url}" target="_blank" rel="noopener noreferrer">詳細を見る →</a>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // 初回描画
+    renderList(peopleData);
+
+    // 4. 検索機能の実装（入力されたキーワードでリアルタイムフィルタリング）
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+      const keyword = e.target.value.trim().toLowerCase();
+
+      if (!keyword) {
+        renderList(peopleData);
+        return;
+      }
+
+      const filtered = peopleData.filter(person => {
+        // 名前でのマッチ
+        const matchName = person.name.toLowerCase().includes(keyword);
+        
+        // 読み（複数）のいずれかでのマッチ
+        const matchYomi = person.yomi.some(y => y.toLowerCase().includes(keyword));
+        
+        // 説明文でのマッチ
+        const matchDesc = person.description.toLowerCase().includes(keyword);
+
+        // タグ（複数）のいずれかでのマッチ
+        const matchTags = person.tags.some(t => t.toLowerCase().includes(keyword));
+
+        return matchName || matchYomi || matchDesc || matchTags;
+      });
+
+      renderList(filtered);
+    });
+  </script>
+
+</body>
+</html>
