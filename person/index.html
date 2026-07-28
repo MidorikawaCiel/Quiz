@@ -19,7 +19,6 @@
       margin-bottom: 1rem;
     }
 
-    /* 検索バー周り */
     .search-container {
       margin-bottom: 20px;
     }
@@ -33,7 +32,12 @@
       box-sizing: border-box;
     }
 
-    /* リスト要素 */
+    .search-hint {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 6px;
+    }
+
     .person-list {
       display: flex;
       flex-direction: column;
@@ -108,8 +112,9 @@
       type="text" 
       id="searchInput" 
       class="search-input" 
-      placeholder="名前、読み（部分一致）またはタグ（完全一致）で検索..."
+      placeholder="名前・読み（部分一致）または #タグ名（スペースで複数可）..."
     >
+    <div class="search-hint">※タグ検索は「#歴史 #武将」のように「#」を付けて指定してください（完全一致・AND検索）。</div>
   </div>
 
   <!-- 人物リスト出力エリア -->
@@ -148,15 +153,13 @@
       }
     ];
 
-    // カタカナをひらがなに変換し、アルファベットを小文字化するヘルパー関数
+    // カタカナ/ひらがな・大文字/小文字の共通正規化関数
     function normalizeString(str) {
       if (!str) return "";
-      // カタカナ (Unicode: 30A1-30F6) を ひらがな (Unicode: 3041-3096) に変換
       const kanaConverted = str.replace(/[\u30a1-\u30f6]/g, match => {
         const chr = match.charCodeAt(0) - 0x60;
         return String.fromCharCode(chr);
       });
-      // アルファベットを小文字化
       return kanaConverted.toLowerCase();
     }
 
@@ -167,7 +170,7 @@
       return firstYomiA.localeCompare(firstYomiB, 'ja');
     });
 
-    // 3. リストを描画する関数
+    // 3. リスト描画関数
     function renderList(data) {
       const container = document.getElementById("personList");
       container.innerHTML = "";
@@ -181,10 +184,7 @@
         const card = document.createElement("div");
         card.className = "person-card";
 
-        // 1つ目の読み仮名のみを取得
         const primaryYomi = person.yomi[0] || "";
-
-        // タグのHTML作成
         const tagsHtml = person.tags.map(tag => `<span class="tag">#${tag}</span>`).join("");
 
         card.innerHTML = `
@@ -202,31 +202,49 @@
     // 初回描画
     renderList(peopleData);
 
-    // 4. 検索機能の実装（ひらがな/カタカナ・大文字/小文字を非区別化）
+    // 4. 検索処理
     const searchInput = document.getElementById("searchInput");
     searchInput.addEventListener("input", (e) => {
-      const keyword = normalizeString(e.target.value.trim());
+      const rawInput = e.target.value.trim();
 
-      if (!keyword) {
+      if (!rawInput) {
         renderList(peopleData);
         return;
       }
 
-      const filtered = peopleData.filter(person => {
-        // 名前（正規化して部分一致）
-        const matchName = normalizeString(person.name).includes(keyword);
-        
-        // 読み（正規化して部分一致）
-        const matchYomi = person.yomi.some(y => normalizeString(y).includes(keyword));
+      // 入力が「#」で始まる場合はタグ検索モードにする
+      if (rawInput.startsWith("#")) {
+        // スペース（全角・半角）で分割し、「#」を取り除いた有効なタグ配列を作成
+        const searchTags = rawInput
+          .split(/[\s ]+/)
+          .filter(term => term.startsWith("#"))
+          .map(term => normalizeString(term.replace(/^#/, "")))
+          .filter(term => term.length > 0);
 
-        // タグ（正規化して完全一致）
-        const matchTagExact = person.tags.some(t => normalizeString(t) === keyword);
+        if (searchTags.length === 0) {
+          renderList(peopleData);
+          return;
+        }
 
-        // 判定（名前、読み、タグ完全一致のいずれかに該当）
-        return matchName || matchYomi || matchTagExact;
-      });
+        // 指定されたすべてのタグが含まれているか（AND検索）
+        const filtered = peopleData.filter(person => {
+          const personNormalizedTags = person.tags.map(t => normalizeString(t));
+          return searchTags.every(searchTag => personNormalizedTags.includes(searchTag));
+        });
 
-      renderList(filtered);
+        renderList(filtered);
+      } else {
+        // 通常の検索（名前または読みの部分一致）
+        const keyword = normalizeString(rawInput);
+
+        const filtered = peopleData.filter(person => {
+          const matchName = normalizeString(person.name).includes(keyword);
+          const matchYomi = person.yomi.some(y => normalizeString(y).includes(keyword));
+          return matchName || matchYomi;
+        });
+
+        renderList(filtered);
+      }
     });
   </script>
 
