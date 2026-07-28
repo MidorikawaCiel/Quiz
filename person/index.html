@@ -76,12 +76,21 @@
       margin-bottom: 12px;
     }
 
+    /* タグをクリック可能にするスタイル調整 */
     .tag {
       background: #eef2f5;
       color: #475569;
       font-size: 0.8rem;
       padding: 2px 8px;
       border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      user-select: none;
+    }
+
+    .tag:hover {
+      background: #2563eb;
+      color: #fff;
     }
 
     .person-link {
@@ -114,7 +123,7 @@
       class="search-input" 
       placeholder="名前・読み（部分一致）または #タグ名（スペースで複数可）..."
     >
-    <div class="search-hint">※タグ検索は「#歴史 #武将」のように「#」を付けて指定してください（完全一致・AND検索）。</div>
+    <div class="search-hint">※タグ検索は「#歴史 #武将」のように「#」を付けて指定してください（クリック可）。</div>
   </div>
 
   <!-- 人物リスト出力エリア -->
@@ -185,7 +194,11 @@
         card.className = "person-card";
 
         const primaryYomi = person.yomi[0] || "";
-        const tagsHtml = person.tags.map(tag => `<span class="tag">#${tag}</span>`).join("");
+        
+        // タグに onclick イベントを仕込む（data-tag属性でタグ名を保持）
+        const tagsHtml = person.tags
+          .map(tag => `<span class="tag" data-tag="${tag}" onclick="onTagClick('${tag}')">#${tag}</span>`)
+          .join("");
 
         card.innerHTML = `
           <div class="person-name">${person.name}</div>
@@ -199,22 +212,17 @@
       });
     }
 
-    // 初回描画
-    renderList(peopleData);
-
-    // 4. 検索処理
-    const searchInput = document.getElementById("searchInput");
-    searchInput.addEventListener("input", (e) => {
-      const rawInput = e.target.value.trim();
+    // 4. 検索処理の共通化関数
+    function performSearch(query) {
+      const rawInput = query.trim();
 
       if (!rawInput) {
         renderList(peopleData);
         return;
       }
 
-      // 入力が「#」で始まる場合はタグ検索モードにする
       if (rawInput.startsWith("#")) {
-        // スペース（全角・半角）で分割し、「#」を取り除いた有効なタグ配列を作成
+        // タグ検索（AND検索）
         const searchTags = rawInput
           .split(/[\s ]+/)
           .filter(term => term.startsWith("#"))
@@ -226,7 +234,6 @@
           return;
         }
 
-        // 指定されたすべてのタグが含まれているか（AND検索）
         const filtered = peopleData.filter(person => {
           const personNormalizedTags = person.tags.map(t => normalizeString(t));
           return searchTags.every(searchTag => personNormalizedTags.includes(searchTag));
@@ -234,7 +241,7 @@
 
         renderList(filtered);
       } else {
-        // 通常の検索（名前または読みの部分一致）
+        // 通常検索（名前・読みの部分一致）
         const keyword = normalizeString(rawInput);
 
         const filtered = peopleData.filter(person => {
@@ -245,6 +252,23 @@
 
         renderList(filtered);
       }
+    }
+
+    // 5. タグをクリックした時の処理
+    function onTagClick(tagName) {
+      const searchInput = document.getElementById("searchInput");
+      // 検索バーに "#タグ名" を設定して検索を実行
+      searchInput.value = `#${tagName}`;
+      performSearch(searchInput.value);
+    }
+
+    // 初回描画
+    renderList(peopleData);
+
+    // 6. 検索入力フィールドのイベントリスナー
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", (e) => {
+      performSearch(e.target.value);
     });
   </script>
 
