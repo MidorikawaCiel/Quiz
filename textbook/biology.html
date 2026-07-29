@@ -3,17 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>自然科学 > 生物学 ロードマップ</title>
+  <title>生物学 (Biology) | 単元ロードマップ</title>
   <style>
     :root {
       --bg-color: #f8fafc;
       --card-bg: #ffffff;
       --text-main: #1e293b;
       --text-sub: #64748b;
-      --border-color: #cbd5e1;
-      --primary-color: #10b981; /* 自然科学テーマカラー：エメラルド */
+      --border-color: #e2e8f0;
+      
+      /* テーマカラー（自然科学: エメラルド） */
+      --primary: #10b981;
       --primary-light: #ecfdf5;
-      --completed-color: #059669;
+      --primary-dark: #047857;
+
+      /* ステータスカラー */
+      --status-completed: #10b981;
+      --status-in-progress: #3b82f6;
+      --status-locked: #94a3b8;
     }
 
     body {
@@ -21,7 +28,7 @@
       background-color: var(--bg-color);
       color: var(--text-main);
       margin: 0;
-      padding: 20px;
+      padding: 30px 20px;
       line-height: 1.6;
     }
 
@@ -32,307 +39,341 @@
 
     /* パンくずリスト */
     .breadcrumb {
-      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
       color: var(--text-sub);
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     .breadcrumb a {
       color: var(--text-sub);
       text-decoration: none;
+      transition: color 0.15s;
     }
 
     .breadcrumb a:hover {
+      color: var(--primary-dark);
       text-decoration: underline;
     }
 
-    /* ヘッダー・進捗 */
-    .header-card {
+    /* ページヘッダー */
+    .page-header {
       background: var(--card-bg);
-      padding: 24px;
       border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 32px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      padding: 24px 28px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+      margin-bottom: 30px;
     }
 
-    .header-card h1 {
+    .page-header h1 {
       margin: 0 0 8px 0;
-      font-size: 1.8rem;
-      color: var(--text-main);
+      font-size: 1.75rem;
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .badge-category {
+    .category-badge {
       font-size: 0.8rem;
       background: var(--primary-light);
-      color: var(--primary-color);
-      padding: 4px 12px;
+      color: var(--primary-dark);
+      padding: 4px 10px;
       border-radius: 20px;
       font-weight: 600;
     }
 
-    .progress-container {
-      margin-top: 16px;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      font-weight: 600;
+    .page-header p {
+      margin: 0 0 16px 0;
       color: var(--text-sub);
-      margin-bottom: 6px;
+      font-size: 0.95rem;
     }
 
-    .progress-bar {
+    /* 進捗バー */
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-bar-bg {
+      flex: 1;
       height: 10px;
       background: #e2e8f0;
       border-radius: 5px;
       overflow: hidden;
     }
 
-    .progress-fill {
+    .progress-bar-fill {
       height: 100%;
-      width: 25%; /* JavaScript等で制御 */
-      background: var(--primary-color);
-      transition: width 0.3s ease;
+      width: 35%; /* 進捗率 */
+      background: var(--primary);
+      border-radius: 5px;
     }
 
-    /* ロードマップ・ツリー構造 */
-    .tree-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      position: relative;
+    .progress-text {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      white-space: nowrap;
     }
 
-    .tree-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-    }
-
-    /* 接続線 */
-    .tree-step:not(:last-child)::after {
-      content: '';
-      width: 3px;
-      height: 24px;
-      background-color: var(--border-color);
-      margin: 8px 0;
-    }
-
-    .node-card {
-      width: 100%;
-      max-width: 600px;
-      background: var(--card-bg);
-      border: 2px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px 20px;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .node-card:hover {
-      border-color: var(--primary-color);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-    }
-
-    /* 完了状態のノード */
-    .node-card.completed {
-      border-color: var(--completed-color);
-      background-color: #f0fdf4;
-    }
-
-    .node-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .node-title {
-      font-size: 1.1rem;
+    /* ロードマップ・セクション */
+    .section-title {
+      font-size: 1.25rem;
       font-weight: 700;
-      color: var(--text-main);
+      margin: 32px 0 16px 0;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .node-desc {
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    /* リスト構造（スキルツリー風） */
+    .unit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .unit-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .unit-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.08);
+      border-color: var(--primary);
+    }
+
+    /* ロックされているカード */
+    .unit-card.locked {
+      opacity: 0.6;
+      background: #f1f5f9;
+      cursor: not-allowed;
+    }
+
+    .unit-card.locked:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: var(--border-color);
+    }
+
+    .unit-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .unit-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .unit-card.completed .unit-number {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
+    .unit-card.in-progress .unit-number {
+      background: #eff6ff;
+      color: var(--status-in-progress);
+    }
+
+    .unit-details h3 {
+      margin: 0 0 4px 0;
+      font-size: 1.05rem;
+    }
+
+    .unit-details p {
+      margin: 0;
       font-size: 0.85rem;
       color: var(--text-sub);
     }
 
-    .prereq-tag {
+    .unit-meta {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
       font-size: 0.75rem;
-      color: #b45309;
-      background-color: #fef3c7;
-      padding: 2px 8px;
-      border-radius: 4px;
-      display: inline-block;
-      margin-top: 4px;
+      color: var(--text-sub);
     }
 
-    /* チェックボタン */
-    .status-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid var(--border-color);
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: transparent;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
+    /* ステータスタグ */
+    .status-tag {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
-    .node-card.completed .status-btn {
-      background: var(--completed-color);
-      border-color: var(--completed-color);
-      color: #fff;
+    .status-completed {
+      background: var(--primary-light);
+      color: var(--primary-dark);
     }
 
-    /* 分岐ノードグループ (並列で選べる単元) */
-    .branch-group {
-      display: flex;
-      gap: 16px;
-      width: 100%;
-      max-width: 700px;
-      justify-content: center;
+    .status-in-progress {
+      background: #eff6ff;
+      color: var(--status-in-progress);
     }
 
-    .branch-group .node-card {
-      flex: 1;
-    }
-
-    @media (max-width: 640px) {
-      .branch-group {
-        flex-direction: column;
-      }
+    .status-locked {
+      background: #e2e8f0;
+      color: var(--status-locked);
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- パンくずナビ -->
+    <!-- パンくずリスト -->
     <nav class="breadcrumb">
-      <a href="index.html">目次トップ</a> &gt; 
-      <a href="#">自然科学</a> &gt; 
-      <span>生物学ロードマップ</span>
+      <a href="#">TOP（学問体系）</a>
+      <span>&rsaquo;</span>
+      <a href="#">自然科学</a>
+      <span>&rsaquo;</span>
+      <span>生物学</span>
     </nav>
 
-    <!-- ヘッダーカード -->
-    <header class="header-card">
+    <!-- ヘッダーエリア -->
+    <header class="page-header">
       <h1>
         生物学 (Biology)
-        <span class="badge-category">自然科学</span>
+        <span class="category-badge">自然科学</span>
       </h1>
-      <p style="margin:0; color: var(--text-sub); font-size: 0.95rem;">
-        生命の最小単位である「細胞」から、植物の生理機能、そして生態系全体の調和までを段階的に探求するマップです。
-      </p>
-
-      <!-- 進捗メーター -->
+      <p>生命現象の基本原理から、分子、細胞、個体、生態系に至るまで体系的に学びます。</p>
+      
+      <!-- 全体進捗 -->
       <div class="progress-container">
-        <div class="progress-label">
-          <span>学習進捗率</span>
-          <span id="progress-text">1 / 4 単元完了 (25%)</span>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill"></div>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
+        <div class="progress-text">進捗率: 35% (3/8 完了)</div>
       </div>
     </header>
 
-    <!-- ツリー構造マップ -->
-    <main class="tree-container">
+    <!-- モジュール 1 -->
+    <div class="section-title">Stage 1: ミクロの生命科学（分子・細胞）</div>
+    <div class="unit-list">
 
-      <!-- STEP 1: 基礎 -->
-      <div class="tree-step">
-        <div class="node-card completed" onclick="toggleNode(this)">
-          <div class="node-info">
-            <div class="node-title">
-              1. 細胞生物学の基礎
+      <!-- 単元 1 (完了) -->
+      <a href="#" class="unit-card completed">
+        <div class="unit-info">
+          <div class="unit-number">✓</div>
+          <div class="unit-details">
+            <h3>01. 細胞の構造と機能</h3>
+            <p>原核細胞と真核細胞の違い、細胞小器官の役割について記述します。</p>
+            <div class="unit-meta">
+              <span>⏱️ 推定時間: 20分</span>
+              <span>📝 演習問題: 5問</span>
             </div>
-            <div class="node-desc">細胞小器官の構造、細胞膜の輸送機構、ATPエネルギー代謝</div>
           </div>
-          <div class="status-btn">✓</div>
         </div>
+        <span class="status-tag status-completed">完了</span>
+      </a>
+
+      <!-- 単元 2 (完了) -->
+      <a href="#" class="unit-card completed">
+        <div class="unit-info">
+          <div class="unit-number">✓</div>
+          <div class="unit-details">
+            <h3>02. 生体分子と酵素</h3>
+            <p>タンパク質・脂質・糖質の構造と、代謝を支える酵素の触媒作用を学びます。</p>
+            <div class="unit-meta">
+              <span>⏱️ 推定時間: 30分</span>
+              <span>📝 演習問題: 8問</span>
+            </div>
+          </div>
+        </div>
+        <span class="status-tag status-completed">完了</span>
+      </a>
+
+      <!-- 単元 3 (学習中) -->
+      <a href="#" class="unit-card in-progress">
+        <div class="unit-info">
+          <div class="unit-number">03</div>
+          <div class="unit-details">
+            <h3>03. 遺伝情報とDNA複製</h3>
+            <p>DNAの二重らせん構造と、細胞分裂時における遺伝情報の複製機構。</p>
+            <div class="unit-meta">
+              <span>⏱️ 推定時間: 25分</span>
+              <span>📝 演習問題: 6問</span>
+            </div>
+          </div>
+        </div>
+        <span class="status-tag status-in-progress">学習中</span>
+      </a>
+
+    </div>
+
+    <!-- モジュール 2 -->
+    <div class="section-title">Stage 2: 個体の生理と植物科学</div>
+    <div class="unit-list">
+
+      <!-- 単元 4 (ロック解除) -->
+      <a href="#" class="unit-card">
+        <div class="unit-info">
+          <div class="unit-number">04</div>
+          <div class="unit-details">
+            <h3>04. 光合成と呼吸の仕組み</h3>
+            <p>葉緑体とミトコンドリアにおけるエネルギー変換（ATP生成）の化学プロセス。</p>
+            <div class="unit-meta">
+              <span>⏱️ 推定時間: 35分</span>
+              <span>📝 演習問題: 7問</span>
+            </div>
+          </div>
+        </div>
+        <span class="status-tag status-in-progress" style="background:#f1f5f9; color:var(--text-sub);">未着手</span>
+      </a>
+
+      <!-- 単元 5 (ロック中) -->
+      <div class="unit-card locked">
+        <div class="unit-info">
+          <div class="unit-number">🔒</div>
+          <div class="unit-details">
+            <h3>05. 植物の分化と生理（道管・篩管と分化）</h3>
+            <p>植物ホルモンや木部・師部の形成（分化）による水・養分の輸送システム。</p>
+            <div class="unit-meta">
+              <span>前提単元: 「04. 光合成と呼吸の仕組み」のクリアが必要</span>
+            </div>
+          </div>
+        </div>
+        <span class="status-tag status-locked">ロック中</span>
       </div>
 
-      <!-- STEP 2: 発展・分岐（並列学習） -->
-      <div class="tree-step">
-        <div class="branch-group">
-          
-          <!-- 分岐A -->
-          <div class="node-card" onclick="toggleNode(this)">
-            <div class="node-info">
-              <div class="node-title">2-A. 分子生物学 & 遺伝学</div>
-              <div class="node-desc">DNAの複製、RNA転写、タンパク質合成と遺伝情報</div>
-              <div><span class="prereq-tag">前提: 1. 細胞生物学</span></div>
-            </div>
-            <div class="status-btn">✓</div>
-          </div>
-
-          <!-- 分岐B -->
-          <div class="node-card" onclick="toggleNode(this)">
-            <div class="node-info">
-              <div class="node-title">2-B. 植物生理学</div>
-              <div class="node-desc">光合成の電子伝達系、水・養分の輸送、木質形成と導管</div>
-              <div><span class="prereq-tag">前提: 1. 細胞生物学</span></div>
-            </div>
-            <div class="status-btn">✓</div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- STEP 3: 統合・応用 -->
-      <div class="tree-step">
-        <div class="node-card" onclick="toggleNode(this)">
-          <div class="node-info">
-            <div class="node-title">3. 生態学 & 環境生物学</div>
-            <div class="node-desc">生態系における物質循環、エネルギー流転、個体群の相互作用</div>
-            <div><span class="prereq-tag">前提: 2-A または 2-B</span></div>
-          </div>
-          <div class="status-btn">✓</div>
-        </div>
-      </div>
-
-    </main>
+    </div>
   </div>
 
-  <script>
-    // 簡易インタラクション（クリックで完了/未完了の切替）
-    function toggleNode(card) {
-      card.classList.toggle('completed');
-      updateProgress();
-    }
-
-    function updateProgress() {
-      const allNodes = document.querySelectorAll('.node-card');
-      const completedNodes = document.querySelectorAll('.node-card.completed');
-      
-      const total = allNodes.length;
-      const completed = completedNodes.length;
-      const percentage = Math.round((completed / total) * 100);
-
-      document.getElementById('progress-text').innerText = `${completed} / ${total} 単元完了 (${percentage}%)`;
-      document.getElementById('progress-fill').style.width = `${percentage}%`;
-    }
-  </script>
 </body>
 </html>
