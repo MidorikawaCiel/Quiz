@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生物学 (Biology) | 単元一覧</title>
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+      --border-color: #e2e8f0;
+      
+      /* テーマカラー（自然科学: エメラルド） */
+      --primary: #10b981;
+      --primary-light: #ecfdf5;
+      --primary-dark: #047857;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 30px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* パンくずリスト */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--text-sub);
+      margin-bottom: 20px;
+    }
+
+    .breadcrumb a {
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+
+    /* ページヘッダー */
+    .page-header {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px 28px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+      margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .category-badge {
+      font-size: 0.8rem;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: var(--text-sub);
+      font-size: 0.95rem;
+    }
+
+    /* セクションタイトル */
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 32px 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    /* 単元カードのリスト */
+    .unit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .unit-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .unit-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.08);
+      border-color: var(--primary);
+    }
+
+    .unit-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .unit-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .unit-details h3 {
+      margin: 0 0 4px 0;
+      font-size: 1.05rem;
+    }
+
+    .unit-details p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+    }
+
+    .unit-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+
+    /* 矢印アイコン */
+    .arrow-icon {
+      color: var(--text-sub);
+      font-size: 1.2rem;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .unit-card:hover .arrow-icon {
+      color: var(--primary);
+      transform: translateX(4px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- パンくずリスト -->
+    <nav class="breadcrumb">
+      <a href="../index.html">TOP（学問体系）</a>
+      <span>&rsaquo;</span>
+      <a href="#">自然科学</a>
+      <span>&rsaquo;</span>
+      <span>生物学</span>
+    </nav>
+
+    <!-- ヘッダーエリア -->
+    <header class="page-header">
+      <h1>
+        プログラミング
+        <span class="category-badge">応用科学</span>
+      </h1>
+      <p>プログラミングを学びます。</p>
+    </header>
+
+    <!-- ステージ 1 -->
+    <div class="section-title">プログラミングについて</div>
+    <div class="unit-list">
+
+      <!-- 単元 1 -->
+      <a href="#" class="unit-card">
+        <div class="unit-info">
+          <div class="unit-number">01</div>
+          <div class="unit-details">
+            <h3>プログラミングについて</h3>
+            <p>プログラミングとは何かを解説します。</p>
+            <div class="unit-meta">
+              <span></span>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-icon">&rsaquo;</div>
+      </a>
+    </div>
+
+    <!-- ステージ 2 -->
+    <div class="section-title">C言語</div>
+    <div class="unit-list">
+
+      <!-- 単元 4 -->
+      <a href="#" class="unit-card">
+        <div class="unit-info">
+          <div class="unit-number">04</div>
+          <div class="unit-details">
+            <h3>コードの基本</h3>
+            <p>C言語のコードの書き方を学びます。</p>
+            <div class="unit-meta">
+              <span></span>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-icon">&rsaquo;</div>
+      </a>
+    </div>
+  </div>
+  <!-- ステージ 3 -->
+    <div class="section-title">Java</div>
+    <div class="unit-list">
+
+      <!-- 単元 4 -->
+      <a href="#" class="unit-card">
+        <div class="unit-info">
+          <div class="unit-number">04</div>
+          <div class="unit-details">
+            <h3>Javaとは？</h3>
+            <p>Java言語の概要を学びます。</p>
+            <div class="unit-meta">
+              <span></span>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-icon">&rsaquo;</div>
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>
