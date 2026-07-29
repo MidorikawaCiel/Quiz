@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>生物学 (Biology) | 単元ロードマップ</title>
+  <title>生物学 (Biology) | 単元一覧</title>
   <style>
     :root {
       --bg-color: #f8fafc;
@@ -16,11 +16,6 @@
       --primary: #10b981;
       --primary-light: #ecfdf5;
       --primary-dark: #047857;
-
-      /* ステータスカラー */
-      --status-completed: #10b981;
-      --status-in-progress: #3b82f6;
-      --status-locked: #94a3b8;
     }
 
     body {
@@ -86,41 +81,12 @@
     }
 
     .page-header p {
-      margin: 0 0 16px 0;
+      margin: 0;
       color: var(--text-sub);
       font-size: 0.95rem;
     }
 
-    /* 進捗バー */
-    .progress-container {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .progress-bar-bg {
-      flex: 1;
-      height: 10px;
-      background: #e2e8f0;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      width: 35%; /* 進捗率 */
-      background: var(--primary);
-      border-radius: 5px;
-    }
-
-    .progress-text {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-sub);
-      white-space: nowrap;
-    }
-
-    /* ロードマップ・セクション */
+    /* セクションタイトル */
     .section-title {
       font-size: 1.25rem;
       font-weight: 700;
@@ -139,12 +105,11 @@
       border-radius: 2px;
     }
 
-    /* リスト構造（スキルツリー風） */
+    /* 単元カードのリスト */
     .unit-list {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      position: relative;
     }
 
     .unit-card {
@@ -167,19 +132,6 @@
       border-color: var(--primary);
     }
 
-    /* ロックされているカード */
-    .unit-card.locked {
-      opacity: 0.6;
-      background: #f1f5f9;
-      cursor: not-allowed;
-    }
-
-    .unit-card.locked:hover {
-      transform: none;
-      box-shadow: none;
-      border-color: var(--border-color);
-    }
-
     .unit-info {
       display: flex;
       align-items: flex-start;
@@ -190,24 +142,14 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: #f1f5f9;
-      color: var(--text-sub);
+      background: var(--primary-light);
+      color: var(--primary-dark);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
       font-size: 0.9rem;
       flex-shrink: 0;
-    }
-
-    .unit-card.completed .unit-number {
-      background: var(--primary-light);
-      color: var(--primary-dark);
-    }
-
-    .unit-card.in-progress .unit-number {
-      background: #eff6ff;
-      color: var(--status-in-progress);
     }
 
     .unit-details h3 {
@@ -223,34 +165,22 @@
 
     .unit-meta {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       margin-top: 6px;
       font-size: 0.75rem;
       color: var(--text-sub);
     }
 
-    /* ステータスタグ */
-    .status-tag {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-weight: 600;
-      white-space: nowrap;
+    /* 矢印アイコン */
+    .arrow-icon {
+      color: var(--text-sub);
+      font-size: 1.2rem;
+      transition: transform 0.2s ease, color 0.2s ease;
     }
 
-    .status-completed {
-      background: var(--primary-light);
-      color: var(--primary-dark);
-    }
-
-    .status-in-progress {
-      background: #eff6ff;
-      color: var(--status-in-progress);
-    }
-
-    .status-locked {
-      background: #e2e8f0;
-      color: var(--status-locked);
+    .unit-card:hover .arrow-icon {
+      color: var(--primary);
+      transform: translateX(4px);
     }
   </style>
 </head>
@@ -273,104 +203,92 @@
         <span class="category-badge">自然科学</span>
       </h1>
       <p>生命現象の基本原理から、分子、細胞、個体、生態系に至るまで体系的に学びます。</p>
-      
-      <!-- 全体進捗 -->
-      <div class="progress-container">
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill"></div>
-        </div>
-        <div class="progress-text">進捗率: 35% (3/8 完了)</div>
-      </div>
     </header>
 
-    <!-- モジュール 1 -->
+    <!-- ステージ 1 -->
     <div class="section-title">Stage 1: ミクロの生命科学（分子・細胞）</div>
     <div class="unit-list">
 
-      <!-- 単元 1 (完了) -->
-      <a href="#" class="unit-card completed">
+      <!-- 単元 1 -->
+      <a href="#" class="unit-card">
         <div class="unit-info">
-          <div class="unit-number">✓</div>
+          <div class="unit-number">01</div>
           <div class="unit-details">
             <h3>01. 細胞の構造と機能</h3>
-            <p>原核細胞と真核細胞の違い、細胞小器官の役割について記述します。</p>
+            <p>原核細胞と真核細胞の違い、細胞小器官の役割について解説します。</p>
             <div class="unit-meta">
-              <span>⏱️ 推定時間: 20分</span>
-              <span>📝 演習問題: 5問</span>
+              <span>⏱️ 読了目安: 20分</span>
             </div>
           </div>
         </div>
-        <span class="status-tag status-completed">完了</span>
+        <div class="arrow-icon">&rsaquo;</div>
       </a>
 
-      <!-- 単元 2 (完了) -->
-      <a href="#" class="unit-card completed">
+      <!-- 単元 2 -->
+      <a href="#" class="unit-card">
         <div class="unit-info">
-          <div class="unit-number">✓</div>
+          <div class="unit-number">02</div>
           <div class="unit-details">
             <h3>02. 生体分子と酵素</h3>
-            <p>タンパク質・脂質・糖質の構造と、代謝を支える酵素の触媒作用を学びます。</p>
+            <p>タンパク質・脂質・糖質の構造と、代謝を支える酵素の触媒作用について学びます。</p>
             <div class="unit-meta">
-              <span>⏱️ 推定時間: 30分</span>
-              <span>📝 演習問題: 8問</span>
+              <span>⏱️ 読了目安: 30分</span>
             </div>
           </div>
         </div>
-        <span class="status-tag status-completed">完了</span>
+        <div class="arrow-icon">&rsaquo;</div>
       </a>
 
-      <!-- 単元 3 (学習中) -->
-      <a href="#" class="unit-card in-progress">
+      <!-- 単元 3 -->
+      <a href="#" class="unit-card">
         <div class="unit-info">
           <div class="unit-number">03</div>
           <div class="unit-details">
             <h3>03. 遺伝情報とDNA複製</h3>
-            <p>DNAの二重らせん構造と、細胞分裂時における遺伝情報の複製機構。</p>
+            <p>DNAの二重らせん構造と、細胞分裂時における遺伝情報の複製機構を解説します。</p>
             <div class="unit-meta">
-              <span>⏱️ 推定時間: 25分</span>
-              <span>📝 演習問題: 6問</span>
+              <span>⏱️ 読了目安: 25分</span>
             </div>
           </div>
         </div>
-        <span class="status-tag status-in-progress">学習中</span>
+        <div class="arrow-icon">&rsaquo;</div>
       </a>
 
     </div>
 
-    <!-- モジュール 2 -->
+    <!-- ステージ 2 -->
     <div class="section-title">Stage 2: 個体の生理と植物科学</div>
     <div class="unit-list">
 
-      <!-- 単元 4 (ロック解除) -->
+      <!-- 単元 4 -->
       <a href="#" class="unit-card">
         <div class="unit-info">
           <div class="unit-number">04</div>
           <div class="unit-details">
             <h3>04. 光合成と呼吸の仕組み</h3>
-            <p>葉緑体とミトコンドリアにおけるエネルギー変換（ATP生成）の化学プロセス。</p>
+            <p>葉緑体とミトコンドリアにおけるエネルギー変換（ATP生成）の化学プロセスについて知ります。</p>
             <div class="unit-meta">
-              <span>⏱️ 推定時間: 35分</span>
-              <span>📝 演習問題: 7問</span>
+              <span>⏱️ 読了目安: 35分</span>
             </div>
           </div>
         </div>
-        <span class="status-tag status-in-progress" style="background:#f1f5f9; color:var(--text-sub);">未着手</span>
+        <div class="arrow-icon">&rsaquo;</div>
       </a>
 
-      <!-- 単元 5 (ロック中) -->
-      <div class="unit-card locked">
+      <!-- 単元 5 -->
+      <a href="#" class="unit-card">
         <div class="unit-info">
-          <div class="unit-number">🔒</div>
+          <div class="unit-number">05</div>
           <div class="unit-details">
             <h3>05. 植物の分化と生理（道管・篩管と分化）</h3>
-            <p>植物ホルモンや木部・師部の形成（分化）による水・養分の輸送システム。</p>
+            <p>植物ホルモンや木部・師部の形成（分化）による水・養分の輸送システムについて学びます。</p>
             <div class="unit-meta">
-              <span>前提単元: 「04. 光合成と呼吸の仕組み」のクリアが必要</span>
+              <span>⏱️ 読了目安: 30分</span>
             </div>
           </div>
         </div>
-        <span class="status-tag status-locked">ロック中</span>
-      </div>
+        <div class="arrow-icon">&rsaquo;</div>
+      </a>
 
     </div>
   </div>
