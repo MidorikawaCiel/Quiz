@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学問の体系的ロードマップ | 目次</title>
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+      --border-color: #e2e8f0;
+      
+      /* 5大分科のテーマカラー */
+      --color-formal: #3b82f6;   /* 形式科学: ブルー */
+      --color-natural: #10b981;  /* 自然科学: エメラルド */
+      --color-applied: #f59e0b;  /* 応用科学: アンバー */
+      --color-humanities: #ec4899;/* 人文科学: ピンク */
+      --color-social: #8b5cf6;   /* 社会科学: パープル */
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    header p {
+      color: var(--text-sub);
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      padding: 20px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* カラー適用 */
+    .card[data-category="formal"] .card-header { background-color: var(--color-formal); }
+    .card[data-category="natural"] .card-header { background-color: var(--color-natural); }
+    .card[data-category="applied"] .card-header { background-color: var(--color-applied); }
+    .card[data-category="humanities"] .card-header { background-color: var(--color-humanities); }
+    .card[data-category="social"] .card-header { background-color: var(--color-social); }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .sub-category {
+      margin-bottom: 20px;
+    }
+
+    .sub-category:last-child {
+      margin-bottom: 0;
+    }
+
+    .sub-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: var(--text-main);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 4px;
+    }
+
+    .topic-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .topic-list li {
+      margin-bottom: 6px;
+    }
+
+    .topic-list a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.15s ease;
+      display: inline-block;
+    }
+
+    .topic-list a:hover {
+      color: var(--text-main);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>全学問体系 ナレッジマップ</h1>
+      <p>あらゆる知識・スキルを基礎から体系的に探索できます</p>
+    </header>
+
+    <div class="grid">
+
+      <!-- 1. 形式科学 -->
+      <div class="card" data-category="formal">
+        <div class="card-header">
+          <span>1. 形式科学</span>
+          <span class="badge">Formal</span>
+        </div>
+        <div class="card-body">
+          <div class="sub-category">
+            <div class="sub-title">数学 (Mathematics)</div>
+            <ul class="topic-list">
+              <li><a href="#">代数学（基礎代数 / 線形代数 / 群論）</a></li>
+              <li><a href="#">解析学（微分積分 / 微分方程式 / 複素解析）</a></li>
+              <li><a href="#">幾何学（ユークリッド幾何 / 位相空間論）</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">論理学・情報理論</div>
+            <ul class="topic-list">
+              <li><a href="#">数理論理学（命題・述語論理）</a></li>
+              <li><a href="#">計算理論・アルゴリズム論</a></li>
+              <li><a href="#">情報理論</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">統計学・確率論</div>
+            <ul class="topic-list">
+              <li><a href="#">記述統計 / 推測統計</a></li>
+              <li><a href="#">確率過程・ベイズ統計</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 自然科学 -->
+      <div class="card" data-category="natural">
+        <div class="card-header">
+          <span>2. 自然科学</span>
+          <span class="badge">Natural</span>
+        </div>
+        <div class="card-body">
+          <div class="sub-category">
+            <div class="sub-title">物理学 (Physics)</div>
+            <ul class="topic-list">
+              <li><a href="#">古典力学 / 電磁気学 / 熱統計力学</a></li>
+              <li><a href="#">量子力学 / 相対性理論</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">化学 (Chemistry)</div>
+            <ul class="topic-list">
+              <li><a href="#">物理化学 / 無機化学 / 有機化学</a></li>
+              <li><a href="#">高分子化学 / 分析化学</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">生物学 (Biology)</div>
+            <ul class="topic-list">
+              <li><a href="#">分子生物学 / 遺伝学 / 細胞生物学</a></li>
+              <li><a href="#">植物生理学 / 生態学 / 進化生物学</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">地球・宇宙科学</div>
+            <ul class="topic-list">
+              <li><a href="#">地質学 / 気象学 / 海洋学 / 天文学</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 応用科学 -->
+      <div class="card" data-category="applied">
+        <div class="card-header">
+          <span>3. 応用科学</span>
+          <span class="badge">Applied</span>
+        </div>
+        <div class="card-body">
+          <div class="sub-category">
+            <div class="sub-title">工学 (Engineering)</div>
+            <ul class="topic-list">
+              <li><a href="#">情報工学（Web開発 / AI・機械学習）</a></li>
+              <li><a href="#">機械工学 / 電気電子工学 / 材料工学</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">農学・生物資源科学</div>
+            <ul class="topic-list">
+              <li><a href="#">農芸化学 / 森林・木質科学 / 水産学</a></li>
+              <li><a href="#">環境保全学・生態系管理</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">医学・薬学・健康科学</div>
+            <ul class="topic-list">
+              <li><a href="#">解剖学 / 生理学 / 薬理学 / 公衆衛生学</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">建築・都市工学</div>
+            <ul class="topic-list">
+              <li><a href="#">構造力学 / 建築計画 / 都市デザイン</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 人文科学 -->
+      <div class="card" data-category="humanities">
+        <div class="card-header">
+          <span>4. 人文科学</span>
+          <span class="badge">Humanities</span>
+        </div>
+        <div class="card-body">
+          <div class="sub-category">
+            <div class="sub-title">哲学・倫理学</div>
+            <ul class="topic-list">
+              <li><a href="#">西洋哲学史 / 東洋哲学 / 科学哲学</a></li>
+              <li><a href="#">倫理学・生命倫理・情報倫理</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">歴史学・考古学</div>
+            <ul class="topic-list">
+              <li><a href="#">世界史 / 日本史 / 文化遺産・考古学</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">言語学・文学</div>
+            <ul class="topic-list">
+              <li><a href="#">構造言語学 / 統語論 / 比較文学</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">芸術・美学</div>
+            <ul class="topic-list">
+              <li><a href="#">美術史 / 音楽理論 / デザイン論</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. 社会科学 -->
+      <div class="card" data-category="social">
+        <div class="card-header">
+          <span>5. 社会科学</span>
+          <span class="badge">Social</span>
+        </div>
+        <div class="card-body">
+          <div class="sub-category">
+            <div class="sub-title">経済学・経営学</div>
+            <ul class="topic-list">
+              <li><a href="#">ミクロ・マクロ経済学 / 金融論</a></li>
+              <li><a href="#">経営戦略 / 会計学 / マーケティング</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">法学・政治学</div>
+            <ul class="topic-list">
+              <li><a href="#">憲法・民法・刑法 / 国際法</a></li>
+              <li><a href="#">政治学・国際関係論 / 行政学</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">社会学・人類学</div>
+            <ul class="topic-list">
+              <li><a href="#">現代社会学 / メディア論 / 文化人類学</a></li>
+            </ul>
+          </div>
+          <div class="sub-category">
+            <div class="sub-title">心理学</div>
+            <ul class="topic-list">
+              <li><a href="#">認知心理学 / 発達心理学 / 社会心理学</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
