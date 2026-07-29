@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1-1 Javaってどんな言語？ | Javaプログラミング完全攻略コース</title>
+  <style>
+    :root {
+      --primary-color: #2b5c8f;
+      --accent-color: #f39c12;
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-color: #333333;
+      --text-muted: #666666;
+      --border-color: #e9ecef;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.8;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: var(--card-bg);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+    }
+
+    /* パンくずリスト & ナビ */
+    .breadcrumb {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .breadcrumb a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* タイトルヘッダー */
+    .lesson-header {
+      border-bottom: 3px solid var(--primary-color);
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+
+    .lesson-header h1 {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: bold;
+      background-color: #27ae60;
+      margin-bottom: 10px;
+    }
+
+    /* 本文スタイル */
+    h2 {
+      font-size: 1.35rem;
+      color: var(--primary-color);
+      margin: 35px 0 15px 0;
+      padding-left: 12px;
+      border-left: 5px solid var(--accent-color);
+    }
+
+    p {
+      margin-bottom: 18px;
+    }
+
+    /* ポイント・補足用ボックス */
+    .point-box {
+      background-color: #eef5fc;
+      border-left: 4px solid var(--primary-color);
+      padding: 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 25px 0;
+    }
+
+    .point-box h3 {
+      font-size: 1.05rem;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+    }
+
+    .point-box ul {
+      margin-left: 20px;
+    }
+
+    /* リスト */
+    ul {
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* ページナビゲーション（前へ/次へ） */
+    .page-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.2s;
+    }
+
+    .btn-secondary {
+      background-color: #e9ecef;
+      color: #495057;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: #ffffff;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 600px) {
+      .container { padding: 20px; }
+      .lesson-header h1 { font-size: 1.4rem; }
+      .page-nav { flex-direction: column; gap: 10px; text-align: center; }
+      .btn { display: block; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- パンくずナビゲーション -->
+    <nav class="breadcrumb">
+      <a href="index.html">コース目次</a> &gt; 第1章：Javaをはじめよう &gt; 1-1 Javaってどんな言語？
+    </nav>
+
+    <!-- レッスンヘッダー -->
+    <header class="lesson-header">
+      <span class="badge">初級</span>
+      <h1>1-1 Javaってどんな言語？</h1>
+    </header>
+
+    <!-- 本文 -->
+    <section>
+      <p>プログラミングを始めようと思ったとき、最初に目にする言語のひとつが<strong>「Java（ジャバ）」</strong>です。1995年に登場して以来、世界中のシステムで使われ続けている大人気のプログラミング言語です。</p>
+
+      <p>まずは、Javaがなぜこれほど長年愛され、選ばれ続けているのか、その特徴と魅力を見ていきましょう！</p>
+
+      <h2>1. Javaの3大特徴</h2>
+
+      <div class="point-box">
+        <h3>💡 この章で覚えるJavaの強み</h3>
+        <ul>
+          <li><strong>どこでも動く（プラットフォーム非依存）</strong></li>
+          <li><strong>安全性が高く、エラーを見つけやすい</strong></li>
+          <li><strong>大規模な開発が得意（オブジェクト指向）</strong></li>
+        </ul>
+      </div>
+
+      <h3>① どこでも動く「JVM（Java仮想マシン）」の仕組み</h3>
+      <p>普通のプログラミング言語は、Windows用、Mac用、Linux用など、動かすパソコン（OS）に合わせてプログラムを書き直す必要があります。</p>
+      <p>しかし、Javaは<strong>「一度書けば、どこでも動く（Write Once, Run Anywhere）」</strong>というスローガンを持っています。</p>
+      <p>これを実現しているのが<strong>JVM（Java Virtual Machine：Java仮想マシン）</strong>という仕組みです。JavaプログラムとOSの間にJVMが「通訳」として入ることで、どんな環境でも同じコードを動かすことができます。</p>
+
+      <h3>② エラーを事前に防ぐ仕組み（静的型付け）</h3>
+      <p>Javaは文法に厳密な言語です。プログラムを動かす前（コンパイル時）に、型間違いなどのエラーをチェックして教えてくれます。そのため、システムが動いている最中に予期せぬエラーで止まるリスクが低く、<strong>「安全性が非常に高い言語」</strong>として信頼されています。</p>
+
+      <h3>③ 整理整頓して作れる「オブジェクト指向」</h3>
+      <p>Javaは「オブジェクト指向」という考え方をベースに作られています。プログラムを「部品（オブジェクト）」として分割して作り、それを組み立てて完成させます。これにより、チームで分担して開発しやすく、後からの修正や機能追加もスムーズに行えます。</p>
+
+      <h2>2. Javaで何が作れるの？</h2>
+      <p>Javaは非常に用途が広く、身の回りのさまざまな場所で使われています。</p>
+
+      <ul>
+        <li><strong>Webアプリケーション・Webサービス</strong>（企業の業務システム、通販サイト、銀行のオンラインシステムなど）</li>
+        <li><strong>Androidアプリ</strong>（スマホアプリの開発言語として長年利用されています）</li>
+        <li><strong>家電製品や組み込みシステム</strong>（ブルーレイプレイヤーやスマート家電など）</li>
+        <li><strong>大人気ゲーム</strong>（例えば『Minecraft（マインクラフト）』のPC版もJavaで作られています）</li>
+      </ul>
+
+      <h2>まとめ</h2>
+      <p>Javaは文法がしっかりしているため、学習の難易度は少し高め（覚えるルールが多い）と言われます。ですが、一度Javaをマスターしてしまえば、<strong>他のプログラミング言語を学ぶのも格段に楽になり、プログラマーとしての需要も非常に高い</strong>という大きなメリットがあります。</p>
+      <p>次のステップでは、実際にJavaを自分のパソコンで動かすための「環境構築」をやっていきましょう！</p>
+    </section>
+
+    <!-- 次へ・前へボタン -->
+    <footer class="page-nav">
+      <a href="index.html" class="btn btn-secondary">← 目次に戻る</a>
+      <a href="lesson1-2.html" class="btn btn-primary">1-2 開発生産環境を整えよう →</a>
+    </footer>
+
+  </div>
+
+</body>
+</html>
