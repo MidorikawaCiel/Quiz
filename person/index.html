@@ -1,9 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>人物</title>
+
   <style>
     body {
       font-family: sans-serif;
@@ -43,7 +45,7 @@
       border: 1px solid #e0e0e0;
       border-radius: 8px;
       padding: 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     .person-name {
@@ -119,83 +121,159 @@
     }
   </style>
 </head>
+
 <body>
 
   <h1>人物</h1>
 
   <!-- 検索フィールド -->
   <div class="search-container">
-    <input 
-      type="text" 
-      id="searchInput" 
-      class="search-input" 
+    <input
+      type="text"
+      id="searchInput"
+      class="search-input"
       placeholder="検索..."
     >
   </div>
 
-  <!-- 人物リスト出力エリア -->
+  <!-- 人物リスト -->
   <div id="personList" class="person-list"></div>
 
   <script>
+
+    // ==========================================
     // 1. 人物データ
+    // ==========================================
+
     const peopleData = [
       {
         name: "ピエール・ド・フェルマー",
-        yomi: ["Pierre de Fermat", "フェルマー", "ピエールドフェルマー"],
+        yomi: [
+          "Pierre de Fermat",
+          "フェルマー",
+          "ピエールドフェルマー"
+        ],
         description: "フランスの弁護士、アマチュア数学者。ディオファントスの数学書『算術』の余白に48の命題を書き込み、そのうちの1つが「フェルマーの最終定理」として300年以上解かれなかった。",
-        tags: ["数学者", "弁護士", "フランス"]
+        tags: [
+          "数学者",
+          "弁護士",
+          "フランス"
+        ]
       },
+
       {
         name: "レオンハルト・オイラー",
-        yomi: ["オイラー", "レオンハルトオイラー"],
+        yomi: [
+          "オイラー",
+          "レオンハルトオイラー"
+        ],
         description: "スイス生まれの数学者。",
-        tags: ["数学者", "スイス"]
+        tags: [
+          "数学者",
+          "スイス"
+        ]
       },
+
       {
         name: "アレクサンドル・グロタンディーク",
-        yomi: ["グロタンディーク", "アレクサンドル・グロタンディーク"],
+        yomi: [
+          "グロタンディーク",
+          "アレクサンドル・グロタンディーク"
+        ],
         description: "フランスの数学者。",
-        tags: ["数学者", "フランス", "フィールズ賞受賞者"]
+        tags: [
+          "数学者",
+          "フランス",
+          "フィールズ賞受賞者"
+        ]
       },
+
       {
         name: "ルイス・ニーレンバーグ",
-        yomi: ["ニーレンバーグ", "ルイスニーレンバーグ", "ルイスニレンバーグ"],
+        yomi: [
+          "ニーレンバーグ",
+          "ルイスニーレンバーグ",
+          "ルイスニレンバーグ"
+        ],
         description: "アメリカの数学者。",
-        tags: ["数学者", "カナダ", "アメリカ", "クラフォード賞受賞者", "チャーン賞受賞者", "アーベル賞受賞者"]
+        tags: [
+          "数学者",
+          "カナダ",
+          "アメリカ",
+          "クラフォード賞受賞者",
+          "チャーン賞受賞者",
+          "アーベル賞受賞者"
+        ]
       },
+
       {
         name: "ピタゴラス",
-        yomi: ["ピタゴラス"],
+        yomi: [
+          "ピタゴラス"
+        ],
         description: "古代ギリシャの数学者、哲学者。",
-        tags: ["数学者", "哲学者", "ギリシャ"]
+        tags: [
+          "数学者",
+          "哲学者",
+          "ギリシャ"
+        ]
       }
     ];
 
-    // カタカナ/ひらがな・大文字/小文字の共通正規化関数
+
+    // ==========================================
+    // 2. 文字列の正規化
+    // ==========================================
+
     function normalizeString(str) {
-      if (!str) return "";
 
-      const kanaConverted = str.replace(/[\u30a1-\u30f6]/g, match => {
-        const chr = match.charCodeAt(0) - 0x60;
-        return String.fromCharCode(chr);
-      });
+      if (!str) {
+        return "";
+      }
 
+      // カタカナ → ひらがな
+      const kanaConverted = str.replace(
+        /[\u30a1-\u30f6]/g,
+        match => {
+          const chr = match.charCodeAt(0) - 0x60;
+          return String.fromCharCode(chr);
+        }
+      );
+
+      // 大文字 → 小文字
       return kanaConverted.toLowerCase();
     }
 
-    // 2. 1つ目の読み仮名をもとに五十音順にソート
-    peopleData.sort((a, b) => {
-      const firstYomiA = normalizeString(a.yomi[0] || "");
-      const firstYomiB = normalizeString(b.yomi[0] || "");
 
-      return firstYomiA.localeCompare(firstYomiB, 'ja');
+    // ==========================================
+    // 3. 五十音順に並べ替え
+    // ==========================================
+
+    peopleData.sort((a, b) => {
+
+      const firstYomiA =
+        normalizeString(a.yomi[0] || "");
+
+      const firstYomiB =
+        normalizeString(b.yomi[0] || "");
+
+      return firstYomiA.localeCompare(
+        firstYomiB,
+        "ja"
+      );
     });
 
-    // 説明文を折り畳む文字数
-    const DESCRIPTION_LIMIT = 100;
 
-    // HTMLに表示する文字列を安全にエスケープ
+    // ==========================================
+    // 4. HTML特殊文字をエスケープ
+    // ==========================================
+
     function escapeHtml(str) {
+
+      if (!str) {
+        return "";
+      }
+
       return str
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -204,35 +282,80 @@
         .replace(/'/g, "&#039;");
     }
 
-    // 3. 説明文のHTMLを作成
-    function createDescriptionHtml(description, index) {
-      const escapedDescription = escapeHtml(description);
 
-      // 短い説明文ならそのまま表示
-      if (description.length <= DESCRIPTION_LIMIT) {
+    // ==========================================
+    // 5. 説明文の折り畳み設定
+    // ==========================================
+
+    // この文字数を超えた説明文を折り畳む
+    const DESCRIPTION_LIMIT = 100;
+
+
+    // ==========================================
+    // 6. 説明文HTMLを作成
+    // ==========================================
+
+    function createDescriptionHtml(
+      description,
+      index
+    ) {
+
+      const escapedDescription =
+        escapeHtml(description);
+
+
+      // 100文字以下ならそのまま表示
+      if (
+        description.length <=
+        DESCRIPTION_LIMIT
+      ) {
+
         return `
-          <p class="person-desc">${escapedDescription}</p>
+          <p class="person-desc">
+            ${escapedDescription}
+          </p>
         `;
       }
 
-      // 長い説明文は折り畳む
-      const shortText = escapeHtml(
-        description.substring(0, DESCRIPTION_LIMIT)
-      );
 
-      const remainingText = escapeHtml(
-        description.substring(DESCRIPTION_LIMIT)
-      );
+      // 最初の100文字
+      const shortText =
+        escapeHtml(
+          description.substring(
+            0,
+            DESCRIPTION_LIMIT
+          )
+        );
+
+
+      // 101文字目以降
+      const remainingText =
+        escapeHtml(
+          description.substring(
+            DESCRIPTION_LIMIT
+          )
+        );
+
 
       return `
         <p class="person-desc">
-          <span class="desc-short" id="desc-short-${index}">
+
+          <span
+            class="desc-short"
+            id="desc-short-${index}"
+          >
             ${shortText}…
           </span>
-          <span class="desc-full" id="desc-full-${index}">
+
+          <span
+            class="desc-full"
+            id="desc-full-${index}"
+          >
             ${remainingText}
           </span>
+
           <br>
+
           <button
             class="more-button"
             id="more-button-${index}"
@@ -240,143 +363,426 @@
           >
             さらに表示
           </button>
+
         </p>
       `;
     }
 
-    // 4. 説明文の開閉
-    function toggleDescription(index) {
-      const shortText = document.getElementById(`desc-short-${index}`);
-      const fullText = document.getElementById(`desc-full-${index}`);
-      const button = document.getElementById(`more-button-${index}`);
 
-      if (fullText.classList.contains("show")) {
+    // ==========================================
+    // 7. 説明文の開閉
+    // ==========================================
+
+    function toggleDescription(index) {
+
+      const shortText =
+        document.getElementById(
+          `desc-short-${index}`
+        );
+
+      const fullText =
+        document.getElementById(
+          `desc-full-${index}`
+        );
+
+      const button =
+        document.getElementById(
+          `more-button-${index}`
+        );
+
+
+      // 現在、全文表示中の場合
+      if (
+        fullText.classList.contains("show")
+      ) {
+
         fullText.classList.remove("show");
-        shortText.style.display = "inline";
-        button.textContent = "さらに表示";
-      } else {
+
+        shortText.style.display =
+          "inline";
+
+        button.textContent =
+          "さらに表示";
+
+      }
+
+      // 現在、折り畳まれている場合
+      else {
+
         fullText.classList.add("show");
-        shortText.style.display = "none";
-        button.textContent = "折りたたむ";
+
+        shortText.style.display =
+          "none";
+
+        button.textContent =
+          "折りたたむ";
       }
     }
 
-    // 5. リスト描画関数
+
+    // ==========================================
+    // 8. 人物リストを表示
+    // ==========================================
+
     function renderList(data) {
-      const container = document.getElementById("personList");
+
+      const container =
+        document.getElementById(
+          "personList"
+        );
+
       container.innerHTML = "";
 
+
+      // 該当者なし
       if (data.length === 0) {
+
         container.innerHTML =
-          '<p class="no-result">該当する人物が見つかりません。</p>';
+          '<p class="no-result">' +
+          '該当する人物が見つかりません。' +
+          '</p>';
+
         return;
       }
 
-      data.forEach((person, index) => {
-        const card = document.createElement("div");
-        card.className = "person-card";
 
-        const primaryYomi = person.yomi[0] || "";
+      data.forEach(
+        (person, index) => {
 
-        const tagsHtml = person.tags
-          .map(tag =>
-            `<span class="tag" data-tag="${escapeHtml(tag)}" onclick="onTagClick('${tag.replace(/'/g, "\\'")}')">#${escapeHtml(tag)}</span>`
-          )
-          .join("");
+          const card =
+            document.createElement("div");
 
-        card.innerHTML = `
-          <div class="person-name">${escapeHtml(person.name)}</div>
+          card.className =
+            "person-card";
 
-          <div class="person-yomi">
-            ${escapeHtml(primaryYomi)}
-          </div>
 
-          ${createDescriptionHtml(person.description, index)}
+          // 最初の読み
+          const primaryYomi =
+            person.yomi[0] || "";
 
-          <div class="person-tags">
-            ${tagsHtml}
-          </div>
-        `;
 
-        container.appendChild(card);
-      });
+          // タグを作成
+          const tagsHtml =
+            person.tags
+              .map(tag => {
+
+                return `
+                  <span
+                    class="tag"
+                    onclick="onTagClick('${tag.replace(/'/g, "\\'")}')"
+                  >
+                    #${escapeHtml(tag)}
+                  </span>
+                `;
+
+              })
+              .join("");
+
+
+          card.innerHTML = `
+
+            <div class="person-name">
+              ${escapeHtml(person.name)}
+            </div>
+
+            <div class="person-yomi">
+              ${escapeHtml(primaryYomi)}
+            </div>
+
+            ${createDescriptionHtml(
+              person.description,
+              index
+            )}
+
+            <div class="person-tags">
+              ${tagsHtml}
+            </div>
+
+          `;
+
+
+          container.appendChild(card);
+
+        }
+      );
     }
 
-    // 6. 検索処理
-    function performSearch(query) {
-      const rawInput = query.trim();
 
+    // ==========================================
+    // 9. 検索処理
+    // ==========================================
+
+    function performSearch(query) {
+
+      const rawInput =
+        query.trim();
+
+
+      // 検索文字が空の場合
       if (!rawInput) {
-        renderList(peopleData);
+
+        renderList(
+          peopleData
+        );
+
         return;
       }
 
-      if (rawInput.startsWith("#")) {
-        // タグ検索（AND検索）
-        const searchTags = rawInput
-          .split(/[\s ]+/)
-          .filter(term => term.startsWith("#"))
-          .map(term =>
-            normalizeString(term.replace(/^#/, ""))
-          )
-          .filter(term => term.length > 0);
 
-        if (searchTags.length === 0) {
-          renderList(peopleData);
+      // ------------------------------------------
+      // タグ検索
+      // ------------------------------------------
+
+      if (
+        rawInput.startsWith("#")
+      ) {
+
+        const searchTags =
+          rawInput
+            .split(/[\s ]+/)
+            .filter(
+              term =>
+                term.startsWith("#")
+            )
+            .map(
+              term =>
+                normalizeString(
+                  term.replace(
+                    /^#/,
+                    ""
+                  )
+                )
+            )
+            .filter(
+              term =>
+                term.length > 0
+            );
+
+
+        if (
+          searchTags.length === 0
+        ) {
+
+          renderList(
+            peopleData
+          );
+
           return;
         }
 
-        const filtered = peopleData.filter(person => {
-          const personNormalizedTags =
-            person.tags.map(t => normalizeString(t));
 
-          return searchTags.every(
-            searchTag => personNormalizedTags.includes(searchTag)
+        // AND検索
+        const filtered =
+          peopleData.filter(
+            person => {
+
+              const personNormalizedTags =
+                person.tags.map(
+                  tag =>
+                    normalizeString(tag)
+                );
+
+
+              return searchTags.every(
+                searchTag =>
+                  personNormalizedTags.includes(
+                    searchTag
+                  )
+              );
+
+            }
           );
-        });
+
 
         renderList(filtered);
 
-      } else {
-        // 通常検索（名前・読みの部分一致）
-        const keyword = normalizeString(rawInput);
+      }
 
-        const filtered = peopleData.filter(person => {
-          const matchName =
-            normalizeString(person.name).includes(keyword);
 
-          const matchYomi =
-            person.yomi.some(
-              y => normalizeString(y).includes(keyword)
-            );
+      // ------------------------------------------
+      // 通常検索
+      // ------------------------------------------
 
-          return matchName || matchYomi;
-        });
+      else {
+
+        const keyword =
+          normalizeString(
+            rawInput
+          );
+
+
+        const filtered =
+          peopleData.filter(
+            person => {
+
+              // 名前を検索
+              const matchName =
+                normalizeString(
+                  person.name
+                ).includes(
+                  keyword
+                );
+
+
+              // 読みを検索
+              const matchYomi =
+                person.yomi.some(
+                  yomi =>
+                    normalizeString(
+                      yomi
+                    ).includes(
+                      keyword
+                    )
+                );
+
+
+              return (
+                matchName ||
+                matchYomi
+              );
+            }
+          );
+
 
         renderList(filtered);
       }
     }
 
-    // 7. タグをクリックした時の処理
-    function onTagClick(tagName) {
-      const searchInput =
-        document.getElementById("searchInput");
 
-      searchInput.value = `#${tagName}`;
-      performSearch(searchInput.value);
+    // ==========================================
+    // 10. タグクリック
+    // ==========================================
+
+    function onTagClick(tagName) {
+
+      const searchInput =
+        document.getElementById(
+          "searchInput"
+        );
+
+
+      // 検索欄にタグを入力
+      searchInput.value =
+        `#${tagName}`;
+
+
+      // 検索実行
+      performSearch(
+        searchInput.value
+      );
+
+
+      // URLを更新
+      updateUrl(
+        searchInput.value
+      );
     }
 
-    // 初回描画
-    renderList(peopleData);
 
-    // 8. 検索入力フィールドのイベントリスナー
+    // ==========================================
+    // 11. URLを更新
+    // ==========================================
+
+    function updateUrl(query) {
+
+      const url =
+        new URL(
+          window.location.href
+        );
+
+
+      if (query.trim()) {
+
+        url.searchParams.set(
+          "q",
+          query.trim()
+        );
+
+      } else {
+
+        url.searchParams.delete(
+          "q"
+        );
+      }
+
+
+      // ページを再読み込みせずURLだけ変更
+      window.history.replaceState(
+        {},
+        "",
+        url
+      );
+    }
+
+
+    // ==========================================
+    // 12. 検索欄の入力イベント
+    // ==========================================
+
     const searchInput =
-      document.getElementById("searchInput");
+      document.getElementById(
+        "searchInput"
+      );
 
-    searchInput.addEventListener("input", (e) => {
-      performSearch(e.target.value);
-    });
+
+    searchInput.addEventListener(
+      "input",
+      (e) => {
+
+        const query =
+          e.target.value;
+
+
+        // 検索
+        performSearch(
+          query
+        );
+
+
+        // URL更新
+        updateUrl(
+          query
+        );
+      }
+    );
+
+
+    // ==========================================
+    // 13. URLパラメータから検索
+    // ==========================================
+
+    const urlParams =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const queryParam =
+      urlParams.get("q");
+
+
+    if (queryParam !== null) {
+
+      // URLの検索文字列を検索欄に表示
+      searchInput.value =
+        queryParam;
+
+
+      // 検索実行
+      performSearch(
+        queryParam
+      );
+
+    } else {
+
+      // パラメータがない場合は全件表示
+      renderList(
+        peopleData
+      );
+    }
+
   </script>
 
 </body>
 </html>
+```
